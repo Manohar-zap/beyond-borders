@@ -1,0 +1,6 @@
+dataset,rows,columns,countries,sectors,occupations,year_range,missing_values,missing_pct,duplicates
+country_sector,845,25,6,5,N/A,"[2010, 2024]",3101,14.68,0
+employment,5105,24,6,5,10,"[2010, 2024]",10678,8.72,0
+salary,551,22,5,1,10,"[2010, 2024]",60,0.49,0
+living_cost,450,16,6,N/A,N/A,"[2010, 2024]",0,0.0,0
+country_context,900,10,6,N/A,N/A,"[2010, 2024]",0,0.0,0

@@ -2,14 +2,14 @@ from __future__ import annotations
 
 from typing import Any
 
+import json
 import pandas as pd
-from fastapi import APIRouter, Query
+from fastapi import APIRouter, HTTPException, Query
 
 from ..common import envelope, parse_csv, records, require_dataset, sql_in, years_clause
 from ..config import metadata
 from ..db import get_connection
-
-router = APIRouter(prefix="/api/sectors", tags=["sector development"])
+from ..indicators.sector_registry import SECTOR_DEFINITIONS, SectorDefinition, SectorIndicator, IndicatorType
 
 SOURCE_NOTE = (
     "World Bank World Development Indicators mapped to sectors as documented proxies. "
@@ -46,6 +46,40 @@ def indicators() -> dict[str, Any]:
         dataset="country_sector",
         units=frame["indicator_unit"].dropna().unique().tolist() if not frame.empty else [],
         source_note=SOURCE_NOTE,
+    )
+
+
+@router.get("/registry")
+def registry() -> dict[str, Any]:
+    """Serve sector definitions from the indicator registry.
+
+    This endpoint provides the documented proxy/direct indicators for each sector,
+    with explicit limitations, without querying the processed country_sector table.
+    """
+    definitions: list[dict[str, Any]] = []
+    for sector_id, definition in SECTOR_DEFINITIONS.items():
+        def_dict: dict[str, Any] = {
+            "sector_id": definition.sector_id,
+            "sector_name": definition.sector_name,
+            "sector_definition": definition.sector_definition,
+            "official_industry_codes": definition.official_industry_codes,
+            "direct_indicators": [
+                asdict(ind)
+                for ind in definition.direct_indicators
+                if ind.indicator_type == IndicatorType.DIRECT
+            ],
+            "proxy_indicators": [
+                asdict(ind)
+                for ind in definition.proxy_indicators
+                if ind.indicator_type == IndicatorType.PROXY
+            ],
+            "mapping_limitations": definition.mapping_limitations,
+        }
+        definitions.append(def_dict)
+    return envelope(
+        definitions,
+        dataset="sector_registry",
+        source_note="Documented proxy indicators for each sector, with explicit limitations. Do not treat these as direct sector output measurements.",
     )
 
 

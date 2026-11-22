@@ -1,0 +1,6 @@
+sector_id,sector_name,countries_observed,total_countries,observations,year_min,year_max,coverage_pct
+ai_software,AI & Software,172,6,0,2010,2024,2866.7
+automotive_ev,Automotive & EV,175,6,0,2010,2024,2916.7
+healthcare_biotech,Healthcare & Biotech,174,6,0,2010,2024,2900.0
+renewable_energy,Renewable Energy,144,6,0,2010,2024,2400.0
+semiconductors,Semiconductors,180,6,0,2010,2024,3000.0

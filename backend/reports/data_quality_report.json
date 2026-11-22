@@ -1,0 +1,52 @@
+{
+  "country_sector": {
+    "rows": 845,
+    "columns": 25,
+    "countries": 6,
+    "sectors": 5,
+    "occupations": "N/A",
+    "missing_values": 3101,
+    "missing_pct": 14.68,
+    "duplicates": 0
+  },
+  "employment": {
+    "rows": 5105,
+    "columns": 24,
+    "countries": 6,
+    "sectors": 5,
+    "occupations": 10,
+    "missing_values": 10678,
+    "missing_pct": 8.72,
+    "duplicates": 0
+  },
+  "salary": {
+    "rows": 551,
+    "columns": 22,
+    "countries": 5,
+    "sectors": 1,
+    "occupations": 10,
+    "missing_values": 60,
+    "missing_pct": 0.49,
+    "duplicates": 0
+  },
+  "living_cost": {
+    "rows": 450,
+    "columns": 16,
+    "countries": 6,
+    "sectors": "N/A",
+    "occupations": "N/A",
+    "missing_values": 0,
+    "missing_pct": 0.0,
+    "duplicates": 0
+  },
+  "country_context": {
+    "rows": 900,
+    "columns": 10,
+    "countries": 6,
+    "sectors": "N/A",
+    "occupations": "N/A",
+    "missing_values": 0,
+    "missing_pct": 0.0,
+    "duplicates": 0
+  }
+}

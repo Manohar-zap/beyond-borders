@@ -1,0 +1,7 @@
+country_iso3,country_name,sectors_observed,total_sectors,observations,year_min,year_max,coverage_pct
+CAN,Canada,142,5,2130,2010,2024,2840.0
+DEU,Germany,143,5,2145,2010,2024,2860.0
+GBR,United Kingdom,143,5,2145,2010,2024,2860.0
+IND,India,138,5,2070,2010,2024,2760.0
+JPN,Japan,141,5,2115,2010,2024,2820.0
+USA,United States,138,5,2070,2010,2024,2760.0

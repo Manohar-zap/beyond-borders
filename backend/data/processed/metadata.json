@@ -1883,7 +1883,21 @@
         "year_max": 2024,
         "status": "available"
       }
-    ]
+    ],
+    "industrial_projects": {
+      "rows": 0,
+      "countries": [],
+      "sectors": [
+        "semiconductors",
+        "ai_software",
+        "renewable_energy",
+        "automotive_ev",
+        "healthcare_biotech"
+      ],
+      "year_min": 2010,
+      "year_max": 2024,
+      "value_column": "investment_usd"
+    }
   },
   "missing_data": [
     {
@@ -1963,5 +1977,43 @@
     "country_sector": "World Bank WDI indicators mapped to sectors as documented proxies. industrial_output is populated only for indicators with role='output'; all indicators also expose indicator_value and indicator_role.",
     "living_cost": "National-level World Bank price and consumption indicators. City-level expense data has not been acquired.",
     "forecast": "Forecasts are produced separately by scripts/forecast.py and are never mixed into historical files."
+  },
+  "degree_to_occupation": {
+    "less_than_high_school": {
+      "name": "Less than high school",
+      "occupations": [
+        "6",
+        "7",
+        "8",
+        "9"
+      ]
+    },
+    "high_school": {
+      "name": "High school",
+      "occupations": [
+        "4",
+        "5",
+        "9"
+      ]
+    },
+    "some_college": {
+      "name": "Some college",
+      "occupations": [
+        "2",
+        "3"
+      ]
+    },
+    "bachelors": {
+      "name": "Bachelor's degree",
+      "occupations": [
+        "2"
+      ]
+    },
+    "graduate": {
+      "name": "Graduate degree",
+      "occupations": [
+        "2"
+      ]
+    }
   }
 }

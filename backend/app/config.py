@@ -15,6 +15,7 @@ DATASETS = [
     "living_cost",
     "country_context",
     "forecast",
+    "industrial_projects",
 ]
 
 API_VERSION = "1.0.0"

@@ -93,6 +93,7 @@ def make_forecast(values: np.ndarray, steps: int):
 
 
 def validate_series(values: np.ndarray) -> dict[str, Any]:
+    """Holdout validation: final 2-3 years held out, rest used for training."""
     n = len(values)
     holdout = 3 if n >= 11 else 2
     train = values[:-holdout]
@@ -123,6 +124,83 @@ def validate_series(values: np.ndarray) -> dict[str, Any]:
         "n": holdout,
         "coverage": round(coverage, 1),
     }
+
+
+def rolling_origin_validate(
+    values: np.ndarray,
+    min_observations: int = 8,
+    min_train: int = 8,
+    n_rolls: int | None = None,
+) -> list[dict[str, Any]]:
+    """Rolling-origin (time series cross-validation) evaluation.
+
+    For each roll i:
+      - Train on values[0 : n - n_rolls + i]
+      - Test on values[n - n_rolls + i : n - n_rolls + i + 1] (one-step-ahead)
+    Returns list of per-roll validation results.
+
+    The number of rolls is `n - min_observations - min_train + 1`, so that the
+    final training window has at least min_observations points and each test
+    period is at least 1 point.
+    """
+    n = len(values)
+    required = min_observations + min_train - 1
+    if n < required:
+        return []
+
+    n_rolls = n_rolls or (n - min_observations - min_train + 1)
+    n_rolls = min(n_rolls, n - min_observations)
+
+    results: list[dict[str, Any]] = []
+    for i in range(n_rolls):
+        # Training window: values[0 : n - n_rolls + i]
+        train_end = n - n_rolls + i
+        train = values[:train_end]
+        test_start = train_end
+        test_end = train_end + 1
+        test = values[test_start:test_end]
+
+        if len(train) < min_train:
+            break
+
+        point, lower, upper, _, _ = make_forecast(train, 1)
+        if point is None or not np.isfinite(float(point)):
+            results.append(
+                {
+                    "mape": math.nan,
+                    "rmse": math.nan,
+                    "coverage": math.nan,
+                    "status": "insufficient_validation",
+                }
+            )
+            continue
+
+        error = float(test[0]) - float(point)
+        rmse = float(abs(error))
+        mask = test != 0
+        mape = float(np.abs(error / test[0]) * 100.0) if mask.any() else math.nan
+
+        if np.isfinite(mape):
+            if mape <= 10:
+                status = "validated"
+            elif mape <= 25:
+                status = "moderate_error"
+            else:
+                status = "high_error"
+        else:
+            denom = abs(float(test[0])) or 1.0
+            rel = rmse / denom
+            status = "validated" if rel <= 0.10 else "moderate_error" if rel <= 0.25 else "high_error"
+
+        results.append(
+            {
+                "mape": round(mape, 2) if np.isfinite(mape) else math.nan,
+                "rmse": round(rmse, 4),
+                "status": status,
+            }
+        )
+
+    return results
 
 
 def clean_series(frame: pd.DataFrame, value_col: str) -> tuple[np.ndarray, np.ndarray] | None:
