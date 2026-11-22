@@ -1,0 +1,60 @@
+{
+  "generated_at": "2026-11-22T09:35:38Z",
+  "model_version": "bb-forecast-1.0.0",
+  "forecast_period": [
+    2025,
+    2030
+  ],
+  "rows": 2946,
+  "series": 491,
+  "by_dataset": {
+    "employment": 1872,
+    "salary": 540,
+    "country_sector": 354,
+    "living_cost": 180
+  },
+  "by_status": {
+    "validated": 1488,
+    "moderate_error": 882,
+    "high_error": 576
+  },
+  "status_table": {
+    "country_sector": {
+      "high_error": 18,
+      "moderate_error": 90,
+      "validated": 246
+    },
+    "employment": {
+      "high_error": 378,
+      "moderate_error": 636,
+      "validated": 858
+    },
+    "living_cost": {
+      "high_error": 36,
+      "moderate_error": 6,
+      "validated": 138
+    },
+    "salary": {
+      "high_error": 144,
+      "moderate_error": 150,
+      "validated": 246
+    }
+  },
+  "method": {
+    "model": "Holt damped additive trend (ETS A,Ad,N); OLS linear-trend fallback",
+    "validation": "Holdout of the final 2\u20133 annual observations; MAPE and RMSE reported per series.",
+    "intervals": "80% empirical residual intervals, widening with sqrt(horizon).",
+    "status_rules": {
+      "validated": "holdout MAPE <= 10%",
+      "moderate_error": "holdout MAPE 10\u201325%",
+      "high_error": "holdout MAPE > 25%"
+    },
+    "eligibility": ">=8 consecutive annual observations; last observation in 2021 or later; completed holdout validation.",
+    "scenario": "baseline_trend \u2014 no policy or technology scenario is assumed."
+  },
+  "notes": [
+    "Forecasts are model outputs, not observations.",
+    "Series with insufficient history, gaps, or a last observation before 2021 are not forecast.",
+    "Intervals reflect historical residual uncertainty only; they do not include structural breaks or policy change."
+  ]
+}

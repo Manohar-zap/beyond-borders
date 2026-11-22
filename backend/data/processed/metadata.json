@@ -1,0 +1,1967 @@
+{
+  "project": "Beyond Borders \u2014 Global Employment Opportunities and Sector Development Intelligence",
+  "generated_at": "2026-11-22T09:33:45Z",
+  "historical_period": {
+    "start": 2010,
+    "end": 2024
+  },
+  "forecast_period": {
+    "start": 2025,
+    "end": 2030
+  },
+  "frequency": "annual",
+  "countries": [
+    {
+      "iso3": "IND",
+      "name": "India",
+      "currency": "INR",
+      "region": "South Asia"
+    },
+    {
+      "iso3": "DEU",
+      "name": "Germany",
+      "currency": "EUR",
+      "region": "Europe"
+    },
+    {
+      "iso3": "CAN",
+      "name": "Canada",
+      "currency": "CAD",
+      "region": "North America"
+    },
+    {
+      "iso3": "USA",
+      "name": "United States",
+      "currency": "USD",
+      "region": "North America"
+    },
+    {
+      "iso3": "GBR",
+      "name": "United Kingdom",
+      "currency": "GBP",
+      "region": "Europe"
+    },
+    {
+      "iso3": "JPN",
+      "name": "Japan",
+      "currency": "JPY",
+      "region": "East Asia"
+    }
+  ],
+  "sectors": [
+    {
+      "id": "semiconductors",
+      "name": "Semiconductors and Electronics",
+      "short": "Semiconductors",
+      "description": "Electronic components, computing hardware and semiconductor supply chains."
+    },
+    {
+      "id": "ai_software",
+      "name": "AI and Software",
+      "short": "AI & Software",
+      "description": "Software production, ICT services and research intensity relevant to AI."
+    },
+    {
+      "id": "renewable_energy",
+      "name": "Renewable Energy",
+      "short": "Renewable Energy",
+      "description": "Renewable energy consumption and low-carbon electricity supply."
+    },
+    {
+      "id": "automotive_ev",
+      "name": "Automotive and Electric Vehicles",
+      "short": "Automotive & EV",
+      "description": "Motor-vehicle manufacturing, distribution and electrification capacity."
+    },
+    {
+      "id": "healthcare_biotech",
+      "name": "Healthcare and Biotechnology",
+      "short": "Healthcare & Biotech",
+      "description": "Health expenditure, health-sector employment and biomedical research."
+    }
+  ],
+  "occupations": [
+    {
+      "code": "TOTAL",
+      "name": "All occupations"
+    },
+    {
+      "code": "1",
+      "name": "Managers"
+    },
+    {
+      "code": "2",
+      "name": "Professionals"
+    },
+    {
+      "code": "3",
+      "name": "Technicians and associate professionals"
+    },
+    {
+      "code": "4",
+      "name": "Clerical support workers"
+    },
+    {
+      "code": "5",
+      "name": "Service and sales workers"
+    },
+    {
+      "code": "6",
+      "name": "Skilled agricultural, forestry and fishery workers"
+    },
+    {
+      "code": "7",
+      "name": "Craft and related trades workers"
+    },
+    {
+      "code": "8",
+      "name": "Plant and machine operators, and assemblers"
+    },
+    {
+      "code": "9",
+      "name": "Elementary occupations"
+    }
+  ],
+  "coverage": {
+    "country_sector": {
+      "rows": 845,
+      "countries": [
+        "CAN",
+        "DEU",
+        "GBR",
+        "IND",
+        "JPN",
+        "USA"
+      ],
+      "sectors": [
+        "ai_software",
+        "automotive_ev",
+        "healthcare_biotech",
+        "renewable_energy",
+        "semiconductors"
+      ],
+      "year_min": 2010,
+      "year_max": 2024,
+      "value_column": "indicator_value"
+    },
+    "employment": {
+      "rows": 5105,
+      "countries": [
+        "CAN",
+        "DEU",
+        "GBR",
+        "IND",
+        "JPN",
+        "USA"
+      ],
+      "sectors": [
+        "ai_software",
+        "automotive_ev",
+        "healthcare_biotech",
+        "renewable_energy",
+        "semiconductors"
+      ],
+      "year_min": 2010,
+      "year_max": 2024,
+      "value_column": "employment"
+    },
+    "salary": {
+      "rows": 551,
+      "countries": [
+        "CAN",
+        "DEU",
+        "GBR",
+        "IND",
+        "USA"
+      ],
+      "sectors": [
+        "ALL"
+      ],
+      "year_min": 2010,
+      "year_max": 2024,
+      "value_column": "salary_mean"
+    },
+    "living_cost": {
+      "rows": 450,
+      "countries": [
+        "CAN",
+        "DEU",
+        "GBR",
+        "IND",
+        "JPN",
+        "USA"
+      ],
+      "sectors": [],
+      "year_min": 2010,
+      "year_max": 2024,
+      "value_column": "expense_value"
+    },
+    "country_sector_matrix": [
+      {
+        "country_iso3": "IND",
+        "country_name": "India",
+        "sector_id": "semiconductors",
+        "sector_name": "Semiconductors and Electronics",
+        "indicators": 2,
+        "observations": 30,
+        "expected": 30,
+        "coverage_pct": 100.0
+      },
+      {
+        "country_iso3": "IND",
+        "country_name": "India",
+        "sector_id": "ai_software",
+        "sector_name": "AI and Software",
+        "indicators": 2,
+        "observations": 26,
+        "expected": 30,
+        "coverage_pct": 86.7
+      },
+      {
+        "country_iso3": "IND",
+        "country_name": "India",
+        "sector_id": "renewable_energy",
+        "sector_name": "Renewable Energy",
+        "indicators": 2,
+        "observations": 24,
+        "expected": 30,
+        "coverage_pct": 80.0
+      },
+      {
+        "country_iso3": "IND",
+        "country_name": "India",
+        "sector_id": "automotive_ev",
+        "sector_name": "Automotive and Electric Vehicles",
+        "indicators": 2,
+        "observations": 30,
+        "expected": 30,
+        "coverage_pct": 100.0
+      },
+      {
+        "country_iso3": "IND",
+        "country_name": "India",
+        "sector_id": "healthcare_biotech",
+        "sector_name": "Healthcare and Biotechnology",
+        "indicators": 2,
+        "observations": 28,
+        "expected": 30,
+        "coverage_pct": 93.3
+      },
+      {
+        "country_iso3": "DEU",
+        "country_name": "Germany",
+        "sector_id": "semiconductors",
+        "sector_name": "Semiconductors and Electronics",
+        "indicators": 2,
+        "observations": 30,
+        "expected": 30,
+        "coverage_pct": 100.0
+      },
+      {
+        "country_iso3": "DEU",
+        "country_name": "Germany",
+        "sector_id": "ai_software",
+        "sector_name": "AI and Software",
+        "indicators": 2,
+        "observations": 29,
+        "expected": 30,
+        "coverage_pct": 96.7
+      },
+      {
+        "country_iso3": "DEU",
+        "country_name": "Germany",
+        "sector_id": "renewable_energy",
+        "sector_name": "Renewable Energy",
+        "indicators": 2,
+        "observations": 24,
+        "expected": 30,
+        "coverage_pct": 80.0
+      },
+      {
+        "country_iso3": "DEU",
+        "country_name": "Germany",
+        "sector_id": "automotive_ev",
+        "sector_name": "Automotive and Electric Vehicles",
+        "indicators": 2,
+        "observations": 30,
+        "expected": 30,
+        "coverage_pct": 100.0
+      },
+      {
+        "country_iso3": "DEU",
+        "country_name": "Germany",
+        "sector_id": "healthcare_biotech",
+        "sector_name": "Healthcare and Biotechnology",
+        "indicators": 2,
+        "observations": 30,
+        "expected": 30,
+        "coverage_pct": 100.0
+      },
+      {
+        "country_iso3": "CAN",
+        "country_name": "Canada",
+        "sector_id": "semiconductors",
+        "sector_name": "Semiconductors and Electronics",
+        "indicators": 2,
+        "observations": 30,
+        "expected": 30,
+        "coverage_pct": 100.0
+      },
+      {
+        "country_iso3": "CAN",
+        "country_name": "Canada",
+        "sector_id": "ai_software",
+        "sector_name": "AI and Software",
+        "indicators": 2,
+        "observations": 30,
+        "expected": 30,
+        "coverage_pct": 100.0
+      },
+      {
+        "country_iso3": "CAN",
+        "country_name": "Canada",
+        "sector_id": "renewable_energy",
+        "sector_name": "Renewable Energy",
+        "indicators": 2,
+        "observations": 24,
+        "expected": 30,
+        "coverage_pct": 80.0
+      },
+      {
+        "country_iso3": "CAN",
+        "country_name": "Canada",
+        "sector_id": "automotive_ev",
+        "sector_name": "Automotive and Electric Vehicles",
+        "indicators": 2,
+        "observations": 28,
+        "expected": 30,
+        "coverage_pct": 93.3
+      },
+      {
+        "country_iso3": "CAN",
+        "country_name": "Canada",
+        "sector_id": "healthcare_biotech",
+        "sector_name": "Healthcare and Biotechnology",
+        "indicators": 2,
+        "observations": 30,
+        "expected": 30,
+        "coverage_pct": 100.0
+      },
+      {
+        "country_iso3": "USA",
+        "country_name": "United States",
+        "sector_id": "semiconductors",
+        "sector_name": "Semiconductors and Electronics",
+        "indicators": 2,
+        "observations": 30,
+        "expected": 30,
+        "coverage_pct": 100.0
+      },
+      {
+        "country_iso3": "USA",
+        "country_name": "United States",
+        "sector_id": "ai_software",
+        "sector_name": "AI and Software",
+        "indicators": 2,
+        "observations": 29,
+        "expected": 30,
+        "coverage_pct": 96.7
+      },
+      {
+        "country_iso3": "USA",
+        "country_name": "United States",
+        "sector_id": "renewable_energy",
+        "sector_name": "Renewable Energy",
+        "indicators": 2,
+        "observations": 24,
+        "expected": 30,
+        "coverage_pct": 80.0
+      },
+      {
+        "country_iso3": "USA",
+        "country_name": "United States",
+        "sector_id": "automotive_ev",
+        "sector_name": "Automotive and Electric Vehicles",
+        "indicators": 2,
+        "observations": 27,
+        "expected": 30,
+        "coverage_pct": 90.0
+      },
+      {
+        "country_iso3": "USA",
+        "country_name": "United States",
+        "sector_id": "healthcare_biotech",
+        "sector_name": "Healthcare and Biotechnology",
+        "indicators": 2,
+        "observations": 28,
+        "expected": 30,
+        "coverage_pct": 93.3
+      },
+      {
+        "country_iso3": "GBR",
+        "country_name": "United Kingdom",
+        "sector_id": "semiconductors",
+        "sector_name": "Semiconductors and Electronics",
+        "indicators": 2,
+        "observations": 30,
+        "expected": 30,
+        "coverage_pct": 100.0
+      },
+      {
+        "country_iso3": "GBR",
+        "country_name": "United Kingdom",
+        "sector_id": "ai_software",
+        "sector_name": "AI and Software",
+        "indicators": 2,
+        "observations": 29,
+        "expected": 30,
+        "coverage_pct": 96.7
+      },
+      {
+        "country_iso3": "GBR",
+        "country_name": "United Kingdom",
+        "sector_id": "renewable_energy",
+        "sector_name": "Renewable Energy",
+        "indicators": 2,
+        "observations": 24,
+        "expected": 30,
+        "coverage_pct": 80.0
+      },
+      {
+        "country_iso3": "GBR",
+        "country_name": "United Kingdom",
+        "sector_id": "automotive_ev",
+        "sector_name": "Automotive and Electric Vehicles",
+        "indicators": 2,
+        "observations": 30,
+        "expected": 30,
+        "coverage_pct": 100.0
+      },
+      {
+        "country_iso3": "GBR",
+        "country_name": "United Kingdom",
+        "sector_id": "healthcare_biotech",
+        "sector_name": "Healthcare and Biotechnology",
+        "indicators": 2,
+        "observations": 30,
+        "expected": 30,
+        "coverage_pct": 100.0
+      },
+      {
+        "country_iso3": "JPN",
+        "country_name": "Japan",
+        "sector_id": "semiconductors",
+        "sector_name": "Semiconductors and Electronics",
+        "indicators": 2,
+        "observations": 30,
+        "expected": 30,
+        "coverage_pct": 100.0
+      },
+      {
+        "country_iso3": "JPN",
+        "country_name": "Japan",
+        "sector_id": "ai_software",
+        "sector_name": "AI and Software",
+        "indicators": 2,
+        "observations": 29,
+        "expected": 30,
+        "coverage_pct": 96.7
+      },
+      {
+        "country_iso3": "JPN",
+        "country_name": "Japan",
+        "sector_id": "renewable_energy",
+        "sector_name": "Renewable Energy",
+        "indicators": 2,
+        "observations": 24,
+        "expected": 30,
+        "coverage_pct": 80.0
+      },
+      {
+        "country_iso3": "JPN",
+        "country_name": "Japan",
+        "sector_id": "automotive_ev",
+        "sector_name": "Automotive and Electric Vehicles",
+        "indicators": 2,
+        "observations": 30,
+        "expected": 30,
+        "coverage_pct": 100.0
+      },
+      {
+        "country_iso3": "JPN",
+        "country_name": "Japan",
+        "sector_id": "healthcare_biotech",
+        "sector_name": "Healthcare and Biotechnology",
+        "indicators": 2,
+        "observations": 28,
+        "expected": 30,
+        "coverage_pct": 93.3
+      }
+    ],
+    "employment_matrix": [
+      {
+        "granularity": "section",
+        "country_iso3": "IND",
+        "sector_id": "semiconductors",
+        "observations": 36,
+        "occupations": 9,
+        "year_min": 2010,
+        "year_max": 2024,
+        "status": "available"
+      },
+      {
+        "granularity": "section",
+        "country_iso3": "IND",
+        "sector_id": "ai_software",
+        "observations": 24,
+        "occupations": 8,
+        "year_min": 2022,
+        "year_max": 2024,
+        "status": "available"
+      },
+      {
+        "granularity": "section",
+        "country_iso3": "IND",
+        "sector_id": "renewable_energy",
+        "observations": 34,
+        "occupations": 9,
+        "year_min": 2010,
+        "year_max": 2024,
+        "status": "available"
+      },
+      {
+        "granularity": "section",
+        "country_iso3": "IND",
+        "sector_id": "automotive_ev",
+        "observations": 27,
+        "occupations": 9,
+        "year_min": 2022,
+        "year_max": 2024,
+        "status": "available"
+      },
+      {
+        "granularity": "section",
+        "country_iso3": "IND",
+        "sector_id": "healthcare_biotech",
+        "observations": 33,
+        "occupations": 9,
+        "year_min": 2010,
+        "year_max": 2024,
+        "status": "available"
+      },
+      {
+        "granularity": "section",
+        "country_iso3": "DEU",
+        "sector_id": "semiconductors",
+        "observations": 125,
+        "occupations": 9,
+        "year_min": 2011,
+        "year_max": 2024,
+        "status": "available"
+      },
+      {
+        "granularity": "section",
+        "country_iso3": "DEU",
+        "sector_id": "ai_software",
+        "observations": 112,
+        "occupations": 8,
+        "year_min": 2011,
+        "year_max": 2024,
+        "status": "available"
+      },
+      {
+        "granularity": "section",
+        "country_iso3": "DEU",
+        "sector_id": "renewable_energy",
+        "observations": 117,
+        "occupations": 9,
+        "year_min": 2011,
+        "year_max": 2024,
+        "status": "available"
+      },
+      {
+        "granularity": "section",
+        "country_iso3": "DEU",
+        "sector_id": "automotive_ev",
+        "observations": 125,
+        "occupations": 9,
+        "year_min": 2011,
+        "year_max": 2024,
+        "status": "available"
+      },
+      {
+        "granularity": "section",
+        "country_iso3": "DEU",
+        "sector_id": "healthcare_biotech",
+        "observations": 125,
+        "occupations": 9,
+        "year_min": 2011,
+        "year_max": 2024,
+        "status": "available"
+      },
+      {
+        "granularity": "section",
+        "country_iso3": "CAN",
+        "sector_id": "semiconductors",
+        "observations": 45,
+        "occupations": 9,
+        "year_min": 2010,
+        "year_max": 2014,
+        "status": "available"
+      },
+      {
+        "granularity": "section",
+        "country_iso3": "CAN",
+        "sector_id": "ai_software",
+        "observations": 0,
+        "occupations": 0,
+        "year_min": null,
+        "year_max": null,
+        "status": "not_available"
+      },
+      {
+        "granularity": "section",
+        "country_iso3": "CAN",
+        "sector_id": "renewable_energy",
+        "observations": 45,
+        "occupations": 9,
+        "year_min": 2010,
+        "year_max": 2014,
+        "status": "available"
+      },
+      {
+        "granularity": "section",
+        "country_iso3": "CAN",
+        "sector_id": "automotive_ev",
+        "observations": 0,
+        "occupations": 0,
+        "year_min": null,
+        "year_max": null,
+        "status": "not_available"
+      },
+      {
+        "granularity": "section",
+        "country_iso3": "CAN",
+        "sector_id": "healthcare_biotech",
+        "observations": 45,
+        "occupations": 9,
+        "year_min": 2010,
+        "year_max": 2014,
+        "status": "available"
+      },
+      {
+        "granularity": "section",
+        "country_iso3": "USA",
+        "sector_id": "semiconductors",
+        "observations": 135,
+        "occupations": 9,
+        "year_min": 2010,
+        "year_max": 2024,
+        "status": "available"
+      },
+      {
+        "granularity": "section",
+        "country_iso3": "USA",
+        "sector_id": "ai_software",
+        "observations": 120,
+        "occupations": 8,
+        "year_min": 2010,
+        "year_max": 2024,
+        "status": "available"
+      },
+      {
+        "granularity": "section",
+        "country_iso3": "USA",
+        "sector_id": "renewable_energy",
+        "observations": 128,
+        "occupations": 9,
+        "year_min": 2010,
+        "year_max": 2024,
+        "status": "available"
+      },
+      {
+        "granularity": "section",
+        "country_iso3": "USA",
+        "sector_id": "automotive_ev",
+        "observations": 135,
+        "occupations": 9,
+        "year_min": 2010,
+        "year_max": 2024,
+        "status": "available"
+      },
+      {
+        "granularity": "section",
+        "country_iso3": "USA",
+        "sector_id": "healthcare_biotech",
+        "observations": 131,
+        "occupations": 9,
+        "year_min": 2010,
+        "year_max": 2024,
+        "status": "available"
+      },
+      {
+        "granularity": "section",
+        "country_iso3": "GBR",
+        "sector_id": "semiconductors",
+        "observations": 134,
+        "occupations": 9,
+        "year_min": 2010,
+        "year_max": 2024,
+        "status": "available"
+      },
+      {
+        "granularity": "section",
+        "country_iso3": "GBR",
+        "sector_id": "ai_software",
+        "observations": 122,
+        "occupations": 9,
+        "year_min": 2010,
+        "year_max": 2024,
+        "status": "available"
+      },
+      {
+        "granularity": "section",
+        "country_iso3": "GBR",
+        "sector_id": "renewable_energy",
+        "observations": 124,
+        "occupations": 9,
+        "year_min": 2010,
+        "year_max": 2024,
+        "status": "available"
+      },
+      {
+        "granularity": "section",
+        "country_iso3": "GBR",
+        "sector_id": "automotive_ev",
+        "observations": 135,
+        "occupations": 9,
+        "year_min": 2010,
+        "year_max": 2024,
+        "status": "available"
+      },
+      {
+        "granularity": "section",
+        "country_iso3": "GBR",
+        "sector_id": "healthcare_biotech",
+        "observations": 134,
+        "occupations": 9,
+        "year_min": 2010,
+        "year_max": 2024,
+        "status": "available"
+      },
+      {
+        "granularity": "section",
+        "country_iso3": "JPN",
+        "sector_id": "semiconductors",
+        "observations": 110,
+        "occupations": 8,
+        "year_min": 2010,
+        "year_max": 2023,
+        "status": "available"
+      },
+      {
+        "granularity": "section",
+        "country_iso3": "JPN",
+        "sector_id": "ai_software",
+        "observations": 104,
+        "occupations": 8,
+        "year_min": 2010,
+        "year_max": 2023,
+        "status": "available"
+      },
+      {
+        "granularity": "section",
+        "country_iso3": "JPN",
+        "sector_id": "renewable_energy",
+        "observations": 96,
+        "occupations": 7,
+        "year_min": 2010,
+        "year_max": 2023,
+        "status": "available"
+      },
+      {
+        "granularity": "section",
+        "country_iso3": "JPN",
+        "sector_id": "automotive_ev",
+        "observations": 110,
+        "occupations": 8,
+        "year_min": 2010,
+        "year_max": 2023,
+        "status": "available"
+      },
+      {
+        "granularity": "section",
+        "country_iso3": "JPN",
+        "sector_id": "healthcare_biotech",
+        "observations": 110,
+        "occupations": 8,
+        "year_min": 2010,
+        "year_max": 2023,
+        "status": "available"
+      },
+      {
+        "granularity": "division",
+        "country_iso3": "IND",
+        "sector_id": "semiconductors",
+        "observations": 22,
+        "occupations": 8,
+        "year_min": 2022,
+        "year_max": 2024,
+        "status": "available"
+      },
+      {
+        "granularity": "division",
+        "country_iso3": "IND",
+        "sector_id": "ai_software",
+        "observations": 23,
+        "occupations": 8,
+        "year_min": 2022,
+        "year_max": 2024,
+        "status": "available"
+      },
+      {
+        "granularity": "division",
+        "country_iso3": "IND",
+        "sector_id": "renewable_energy",
+        "observations": 25,
+        "occupations": 9,
+        "year_min": 2022,
+        "year_max": 2024,
+        "status": "available"
+      },
+      {
+        "granularity": "division",
+        "country_iso3": "IND",
+        "sector_id": "automotive_ev",
+        "observations": 24,
+        "occupations": 8,
+        "year_min": 2022,
+        "year_max": 2024,
+        "status": "available"
+      },
+      {
+        "granularity": "division",
+        "country_iso3": "IND",
+        "sector_id": "healthcare_biotech",
+        "observations": 24,
+        "occupations": 8,
+        "year_min": 2022,
+        "year_max": 2024,
+        "status": "available"
+      },
+      {
+        "granularity": "division",
+        "country_iso3": "DEU",
+        "sector_id": "semiconductors",
+        "observations": 0,
+        "occupations": 0,
+        "year_min": null,
+        "year_max": null,
+        "status": "not_available"
+      },
+      {
+        "granularity": "division",
+        "country_iso3": "DEU",
+        "sector_id": "ai_software",
+        "observations": 0,
+        "occupations": 0,
+        "year_min": null,
+        "year_max": null,
+        "status": "not_available"
+      },
+      {
+        "granularity": "division",
+        "country_iso3": "DEU",
+        "sector_id": "renewable_energy",
+        "observations": 0,
+        "occupations": 0,
+        "year_min": null,
+        "year_max": null,
+        "status": "not_available"
+      },
+      {
+        "granularity": "division",
+        "country_iso3": "DEU",
+        "sector_id": "automotive_ev",
+        "observations": 0,
+        "occupations": 0,
+        "year_min": null,
+        "year_max": null,
+        "status": "not_available"
+      },
+      {
+        "granularity": "division",
+        "country_iso3": "DEU",
+        "sector_id": "healthcare_biotech",
+        "observations": 0,
+        "occupations": 0,
+        "year_min": null,
+        "year_max": null,
+        "status": "not_available"
+      },
+      {
+        "granularity": "division",
+        "country_iso3": "CAN",
+        "sector_id": "semiconductors",
+        "observations": 0,
+        "occupations": 0,
+        "year_min": null,
+        "year_max": null,
+        "status": "not_available"
+      },
+      {
+        "granularity": "division",
+        "country_iso3": "CAN",
+        "sector_id": "ai_software",
+        "observations": 0,
+        "occupations": 0,
+        "year_min": null,
+        "year_max": null,
+        "status": "not_available"
+      },
+      {
+        "granularity": "division",
+        "country_iso3": "CAN",
+        "sector_id": "renewable_energy",
+        "observations": 0,
+        "occupations": 0,
+        "year_min": null,
+        "year_max": null,
+        "status": "not_available"
+      },
+      {
+        "granularity": "division",
+        "country_iso3": "CAN",
+        "sector_id": "automotive_ev",
+        "observations": 0,
+        "occupations": 0,
+        "year_min": null,
+        "year_max": null,
+        "status": "not_available"
+      },
+      {
+        "granularity": "division",
+        "country_iso3": "CAN",
+        "sector_id": "healthcare_biotech",
+        "observations": 0,
+        "occupations": 0,
+        "year_min": null,
+        "year_max": null,
+        "status": "not_available"
+      },
+      {
+        "granularity": "division",
+        "country_iso3": "USA",
+        "sector_id": "semiconductors",
+        "observations": 120,
+        "occupations": 8,
+        "year_min": 2010,
+        "year_max": 2024,
+        "status": "available"
+      },
+      {
+        "granularity": "division",
+        "country_iso3": "USA",
+        "sector_id": "ai_software",
+        "observations": 120,
+        "occupations": 8,
+        "year_min": 2010,
+        "year_max": 2024,
+        "status": "available"
+      },
+      {
+        "granularity": "division",
+        "country_iso3": "USA",
+        "sector_id": "renewable_energy",
+        "observations": 128,
+        "occupations": 9,
+        "year_min": 2010,
+        "year_max": 2024,
+        "status": "available"
+      },
+      {
+        "granularity": "division",
+        "country_iso3": "USA",
+        "sector_id": "automotive_ev",
+        "observations": 120,
+        "occupations": 8,
+        "year_min": 2010,
+        "year_max": 2024,
+        "status": "available"
+      },
+      {
+        "granularity": "division",
+        "country_iso3": "USA",
+        "sector_id": "healthcare_biotech",
+        "observations": 127,
+        "occupations": 9,
+        "year_min": 2010,
+        "year_max": 2024,
+        "status": "available"
+      },
+      {
+        "granularity": "division",
+        "country_iso3": "GBR",
+        "sector_id": "semiconductors",
+        "observations": 120,
+        "occupations": 8,
+        "year_min": 2010,
+        "year_max": 2024,
+        "status": "available"
+      },
+      {
+        "granularity": "division",
+        "country_iso3": "GBR",
+        "sector_id": "ai_software",
+        "observations": 108,
+        "occupations": 9,
+        "year_min": 2010,
+        "year_max": 2024,
+        "status": "available"
+      },
+      {
+        "granularity": "division",
+        "country_iso3": "GBR",
+        "sector_id": "renewable_energy",
+        "observations": 124,
+        "occupations": 9,
+        "year_min": 2010,
+        "year_max": 2024,
+        "status": "available"
+      },
+      {
+        "granularity": "division",
+        "country_iso3": "GBR",
+        "sector_id": "automotive_ev",
+        "observations": 120,
+        "occupations": 8,
+        "year_min": 2010,
+        "year_max": 2024,
+        "status": "available"
+      },
+      {
+        "granularity": "division",
+        "country_iso3": "GBR",
+        "sector_id": "healthcare_biotech",
+        "observations": 127,
+        "occupations": 9,
+        "year_min": 2010,
+        "year_max": 2024,
+        "status": "available"
+      },
+      {
+        "granularity": "division",
+        "country_iso3": "JPN",
+        "sector_id": "semiconductors",
+        "observations": 96,
+        "occupations": 7,
+        "year_min": 2010,
+        "year_max": 2023,
+        "status": "available"
+      },
+      {
+        "granularity": "division",
+        "country_iso3": "JPN",
+        "sector_id": "ai_software",
+        "observations": 103,
+        "occupations": 8,
+        "year_min": 2010,
+        "year_max": 2023,
+        "status": "available"
+      },
+      {
+        "granularity": "division",
+        "country_iso3": "JPN",
+        "sector_id": "renewable_energy",
+        "observations": 96,
+        "occupations": 7,
+        "year_min": 2010,
+        "year_max": 2023,
+        "status": "available"
+      },
+      {
+        "granularity": "division",
+        "country_iso3": "JPN",
+        "sector_id": "automotive_ev",
+        "observations": 96,
+        "occupations": 7,
+        "year_min": 2010,
+        "year_max": 2023,
+        "status": "available"
+      },
+      {
+        "granularity": "division",
+        "country_iso3": "JPN",
+        "sector_id": "healthcare_biotech",
+        "observations": 103,
+        "occupations": 8,
+        "year_min": 2010,
+        "year_max": 2023,
+        "status": "available"
+      }
+    ],
+    "salary_matrix": [
+      {
+        "country_iso3": "IND",
+        "occupation_code": "TOTAL",
+        "occupation_name": "All occupations",
+        "observations": 8,
+        "year_min": 2010,
+        "year_max": 2024,
+        "status": "available"
+      },
+      {
+        "country_iso3": "IND",
+        "occupation_code": "1",
+        "occupation_name": "Managers",
+        "observations": 7,
+        "year_min": 2010,
+        "year_max": 2024,
+        "status": "available"
+      },
+      {
+        "country_iso3": "IND",
+        "occupation_code": "2",
+        "occupation_name": "Professionals",
+        "observations": 7,
+        "year_min": 2010,
+        "year_max": 2024,
+        "status": "available"
+      },
+      {
+        "country_iso3": "IND",
+        "occupation_code": "3",
+        "occupation_name": "Technicians and associate professionals",
+        "observations": 7,
+        "year_min": 2010,
+        "year_max": 2024,
+        "status": "available"
+      },
+      {
+        "country_iso3": "IND",
+        "occupation_code": "4",
+        "occupation_name": "Clerical support workers",
+        "observations": 7,
+        "year_min": 2010,
+        "year_max": 2024,
+        "status": "available"
+      },
+      {
+        "country_iso3": "IND",
+        "occupation_code": "5",
+        "occupation_name": "Service and sales workers",
+        "observations": 7,
+        "year_min": 2010,
+        "year_max": 2024,
+        "status": "available"
+      },
+      {
+        "country_iso3": "IND",
+        "occupation_code": "6",
+        "occupation_name": "Skilled agricultural, forestry and fishery workers",
+        "observations": 7,
+        "year_min": 2010,
+        "year_max": 2024,
+        "status": "available"
+      },
+      {
+        "country_iso3": "IND",
+        "occupation_code": "7",
+        "occupation_name": "Craft and related trades workers",
+        "observations": 7,
+        "year_min": 2010,
+        "year_max": 2024,
+        "status": "available"
+      },
+      {
+        "country_iso3": "IND",
+        "occupation_code": "8",
+        "occupation_name": "Plant and machine operators, and assemblers",
+        "observations": 7,
+        "year_min": 2010,
+        "year_max": 2024,
+        "status": "available"
+      },
+      {
+        "country_iso3": "IND",
+        "occupation_code": "9",
+        "occupation_name": "Elementary occupations",
+        "observations": 7,
+        "year_min": 2010,
+        "year_max": 2024,
+        "status": "available"
+      },
+      {
+        "country_iso3": "DEU",
+        "occupation_code": "TOTAL",
+        "occupation_name": "All occupations",
+        "observations": 13,
+        "year_min": 2010,
+        "year_max": 2022,
+        "status": "available"
+      },
+      {
+        "country_iso3": "DEU",
+        "occupation_code": "1",
+        "occupation_name": "Managers",
+        "observations": 13,
+        "year_min": 2010,
+        "year_max": 2022,
+        "status": "available"
+      },
+      {
+        "country_iso3": "DEU",
+        "occupation_code": "2",
+        "occupation_name": "Professionals",
+        "observations": 13,
+        "year_min": 2010,
+        "year_max": 2022,
+        "status": "available"
+      },
+      {
+        "country_iso3": "DEU",
+        "occupation_code": "3",
+        "occupation_name": "Technicians and associate professionals",
+        "observations": 13,
+        "year_min": 2010,
+        "year_max": 2022,
+        "status": "available"
+      },
+      {
+        "country_iso3": "DEU",
+        "occupation_code": "4",
+        "occupation_name": "Clerical support workers",
+        "observations": 13,
+        "year_min": 2010,
+        "year_max": 2022,
+        "status": "available"
+      },
+      {
+        "country_iso3": "DEU",
+        "occupation_code": "5",
+        "occupation_name": "Service and sales workers",
+        "observations": 13,
+        "year_min": 2010,
+        "year_max": 2022,
+        "status": "available"
+      },
+      {
+        "country_iso3": "DEU",
+        "occupation_code": "6",
+        "occupation_name": "Skilled agricultural, forestry and fishery workers",
+        "observations": 13,
+        "year_min": 2010,
+        "year_max": 2022,
+        "status": "available"
+      },
+      {
+        "country_iso3": "DEU",
+        "occupation_code": "7",
+        "occupation_name": "Craft and related trades workers",
+        "observations": 13,
+        "year_min": 2010,
+        "year_max": 2022,
+        "status": "available"
+      },
+      {
+        "country_iso3": "DEU",
+        "occupation_code": "8",
+        "occupation_name": "Plant and machine operators, and assemblers",
+        "observations": 13,
+        "year_min": 2010,
+        "year_max": 2022,
+        "status": "available"
+      },
+      {
+        "country_iso3": "DEU",
+        "occupation_code": "9",
+        "occupation_name": "Elementary occupations",
+        "observations": 13,
+        "year_min": 2010,
+        "year_max": 2022,
+        "status": "available"
+      },
+      {
+        "country_iso3": "CAN",
+        "occupation_code": "TOTAL",
+        "occupation_name": "All occupations",
+        "observations": 5,
+        "year_min": 2010,
+        "year_max": 2014,
+        "status": "available"
+      },
+      {
+        "country_iso3": "CAN",
+        "occupation_code": "1",
+        "occupation_name": "Managers",
+        "observations": 5,
+        "year_min": 2010,
+        "year_max": 2014,
+        "status": "available"
+      },
+      {
+        "country_iso3": "CAN",
+        "occupation_code": "2",
+        "occupation_name": "Professionals",
+        "observations": 5,
+        "year_min": 2010,
+        "year_max": 2014,
+        "status": "available"
+      },
+      {
+        "country_iso3": "CAN",
+        "occupation_code": "3",
+        "occupation_name": "Technicians and associate professionals",
+        "observations": 5,
+        "year_min": 2010,
+        "year_max": 2014,
+        "status": "available"
+      },
+      {
+        "country_iso3": "CAN",
+        "occupation_code": "4",
+        "occupation_name": "Clerical support workers",
+        "observations": 5,
+        "year_min": 2010,
+        "year_max": 2014,
+        "status": "available"
+      },
+      {
+        "country_iso3": "CAN",
+        "occupation_code": "5",
+        "occupation_name": "Service and sales workers",
+        "observations": 5,
+        "year_min": 2010,
+        "year_max": 2014,
+        "status": "available"
+      },
+      {
+        "country_iso3": "CAN",
+        "occupation_code": "6",
+        "occupation_name": "Skilled agricultural, forestry and fishery workers",
+        "observations": 5,
+        "year_min": 2010,
+        "year_max": 2014,
+        "status": "available"
+      },
+      {
+        "country_iso3": "CAN",
+        "occupation_code": "7",
+        "occupation_name": "Craft and related trades workers",
+        "observations": 5,
+        "year_min": 2010,
+        "year_max": 2014,
+        "status": "available"
+      },
+      {
+        "country_iso3": "CAN",
+        "occupation_code": "8",
+        "occupation_name": "Plant and machine operators, and assemblers",
+        "observations": 5,
+        "year_min": 2010,
+        "year_max": 2014,
+        "status": "available"
+      },
+      {
+        "country_iso3": "CAN",
+        "occupation_code": "9",
+        "occupation_name": "Elementary occupations",
+        "observations": 5,
+        "year_min": 2010,
+        "year_max": 2014,
+        "status": "available"
+      },
+      {
+        "country_iso3": "USA",
+        "occupation_code": "TOTAL",
+        "occupation_name": "All occupations",
+        "observations": 15,
+        "year_min": 2010,
+        "year_max": 2024,
+        "status": "available"
+      },
+      {
+        "country_iso3": "USA",
+        "occupation_code": "1",
+        "occupation_name": "Managers",
+        "observations": 15,
+        "year_min": 2010,
+        "year_max": 2024,
+        "status": "available"
+      },
+      {
+        "country_iso3": "USA",
+        "occupation_code": "2",
+        "occupation_name": "Professionals",
+        "observations": 15,
+        "year_min": 2010,
+        "year_max": 2024,
+        "status": "available"
+      },
+      {
+        "country_iso3": "USA",
+        "occupation_code": "3",
+        "occupation_name": "Technicians and associate professionals",
+        "observations": 15,
+        "year_min": 2010,
+        "year_max": 2024,
+        "status": "available"
+      },
+      {
+        "country_iso3": "USA",
+        "occupation_code": "4",
+        "occupation_name": "Clerical support workers",
+        "observations": 15,
+        "year_min": 2010,
+        "year_max": 2024,
+        "status": "available"
+      },
+      {
+        "country_iso3": "USA",
+        "occupation_code": "5",
+        "occupation_name": "Service and sales workers",
+        "observations": 15,
+        "year_min": 2010,
+        "year_max": 2024,
+        "status": "available"
+      },
+      {
+        "country_iso3": "USA",
+        "occupation_code": "6",
+        "occupation_name": "Skilled agricultural, forestry and fishery workers",
+        "observations": 15,
+        "year_min": 2010,
+        "year_max": 2024,
+        "status": "available"
+      },
+      {
+        "country_iso3": "USA",
+        "occupation_code": "7",
+        "occupation_name": "Craft and related trades workers",
+        "observations": 15,
+        "year_min": 2010,
+        "year_max": 2024,
+        "status": "available"
+      },
+      {
+        "country_iso3": "USA",
+        "occupation_code": "8",
+        "occupation_name": "Plant and machine operators, and assemblers",
+        "observations": 15,
+        "year_min": 2010,
+        "year_max": 2024,
+        "status": "available"
+      },
+      {
+        "country_iso3": "USA",
+        "occupation_code": "9",
+        "occupation_name": "Elementary occupations",
+        "observations": 15,
+        "year_min": 2010,
+        "year_max": 2024,
+        "status": "available"
+      },
+      {
+        "country_iso3": "GBR",
+        "occupation_code": "TOTAL",
+        "occupation_name": "All occupations",
+        "observations": 15,
+        "year_min": 2010,
+        "year_max": 2024,
+        "status": "available"
+      },
+      {
+        "country_iso3": "GBR",
+        "occupation_code": "1",
+        "occupation_name": "Managers",
+        "observations": 15,
+        "year_min": 2010,
+        "year_max": 2024,
+        "status": "available"
+      },
+      {
+        "country_iso3": "GBR",
+        "occupation_code": "2",
+        "occupation_name": "Professionals",
+        "observations": 15,
+        "year_min": 2010,
+        "year_max": 2024,
+        "status": "available"
+      },
+      {
+        "country_iso3": "GBR",
+        "occupation_code": "3",
+        "occupation_name": "Technicians and associate professionals",
+        "observations": 15,
+        "year_min": 2010,
+        "year_max": 2024,
+        "status": "available"
+      },
+      {
+        "country_iso3": "GBR",
+        "occupation_code": "4",
+        "occupation_name": "Clerical support workers",
+        "observations": 15,
+        "year_min": 2010,
+        "year_max": 2024,
+        "status": "available"
+      },
+      {
+        "country_iso3": "GBR",
+        "occupation_code": "5",
+        "occupation_name": "Service and sales workers",
+        "observations": 15,
+        "year_min": 2010,
+        "year_max": 2024,
+        "status": "available"
+      },
+      {
+        "country_iso3": "GBR",
+        "occupation_code": "6",
+        "occupation_name": "Skilled agricultural, forestry and fishery workers",
+        "observations": 15,
+        "year_min": 2010,
+        "year_max": 2024,
+        "status": "available"
+      },
+      {
+        "country_iso3": "GBR",
+        "occupation_code": "7",
+        "occupation_name": "Craft and related trades workers",
+        "observations": 15,
+        "year_min": 2010,
+        "year_max": 2024,
+        "status": "available"
+      },
+      {
+        "country_iso3": "GBR",
+        "occupation_code": "8",
+        "occupation_name": "Plant and machine operators, and assemblers",
+        "observations": 15,
+        "year_min": 2010,
+        "year_max": 2024,
+        "status": "available"
+      },
+      {
+        "country_iso3": "GBR",
+        "occupation_code": "9",
+        "occupation_name": "Elementary occupations",
+        "observations": 15,
+        "year_min": 2010,
+        "year_max": 2024,
+        "status": "available"
+      },
+      {
+        "country_iso3": "JPN",
+        "occupation_code": "TOTAL",
+        "occupation_name": "All occupations",
+        "observations": 0,
+        "year_min": null,
+        "year_max": null,
+        "status": "not_available"
+      },
+      {
+        "country_iso3": "JPN",
+        "occupation_code": "1",
+        "occupation_name": "Managers",
+        "observations": 0,
+        "year_min": null,
+        "year_max": null,
+        "status": "not_available"
+      },
+      {
+        "country_iso3": "JPN",
+        "occupation_code": "2",
+        "occupation_name": "Professionals",
+        "observations": 0,
+        "year_min": null,
+        "year_max": null,
+        "status": "not_available"
+      },
+      {
+        "country_iso3": "JPN",
+        "occupation_code": "3",
+        "occupation_name": "Technicians and associate professionals",
+        "observations": 0,
+        "year_min": null,
+        "year_max": null,
+        "status": "not_available"
+      },
+      {
+        "country_iso3": "JPN",
+        "occupation_code": "4",
+        "occupation_name": "Clerical support workers",
+        "observations": 0,
+        "year_min": null,
+        "year_max": null,
+        "status": "not_available"
+      },
+      {
+        "country_iso3": "JPN",
+        "occupation_code": "5",
+        "occupation_name": "Service and sales workers",
+        "observations": 0,
+        "year_min": null,
+        "year_max": null,
+        "status": "not_available"
+      },
+      {
+        "country_iso3": "JPN",
+        "occupation_code": "6",
+        "occupation_name": "Skilled agricultural, forestry and fishery workers",
+        "observations": 0,
+        "year_min": null,
+        "year_max": null,
+        "status": "not_available"
+      },
+      {
+        "country_iso3": "JPN",
+        "occupation_code": "7",
+        "occupation_name": "Craft and related trades workers",
+        "observations": 0,
+        "year_min": null,
+        "year_max": null,
+        "status": "not_available"
+      },
+      {
+        "country_iso3": "JPN",
+        "occupation_code": "8",
+        "occupation_name": "Plant and machine operators, and assemblers",
+        "observations": 0,
+        "year_min": null,
+        "year_max": null,
+        "status": "not_available"
+      },
+      {
+        "country_iso3": "JPN",
+        "occupation_code": "9",
+        "occupation_name": "Elementary occupations",
+        "observations": 0,
+        "year_min": null,
+        "year_max": null,
+        "status": "not_available"
+      }
+    ],
+    "living_cost_matrix": [
+      {
+        "expense_category": "consumer_price_index",
+        "country_iso3": "IND",
+        "observations": 15,
+        "year_min": 2010,
+        "year_max": 2024,
+        "status": "available"
+      },
+      {
+        "expense_category": "consumer_price_index",
+        "country_iso3": "DEU",
+        "observations": 15,
+        "year_min": 2010,
+        "year_max": 2024,
+        "status": "available"
+      },
+      {
+        "expense_category": "consumer_price_index",
+        "country_iso3": "CAN",
+        "observations": 15,
+        "year_min": 2010,
+        "year_max": 2024,
+        "status": "available"
+      },
+      {
+        "expense_category": "consumer_price_index",
+        "country_iso3": "USA",
+        "observations": 15,
+        "year_min": 2010,
+        "year_max": 2024,
+        "status": "available"
+      },
+      {
+        "expense_category": "consumer_price_index",
+        "country_iso3": "GBR",
+        "observations": 15,
+        "year_min": 2010,
+        "year_max": 2024,
+        "status": "available"
+      },
+      {
+        "expense_category": "consumer_price_index",
+        "country_iso3": "JPN",
+        "observations": 15,
+        "year_min": 2010,
+        "year_max": 2024,
+        "status": "available"
+      },
+      {
+        "expense_category": "consumer_price_inflation",
+        "country_iso3": "IND",
+        "observations": 15,
+        "year_min": 2010,
+        "year_max": 2024,
+        "status": "available"
+      },
+      {
+        "expense_category": "consumer_price_inflation",
+        "country_iso3": "DEU",
+        "observations": 15,
+        "year_min": 2010,
+        "year_max": 2024,
+        "status": "available"
+      },
+      {
+        "expense_category": "consumer_price_inflation",
+        "country_iso3": "CAN",
+        "observations": 15,
+        "year_min": 2010,
+        "year_max": 2024,
+        "status": "available"
+      },
+      {
+        "expense_category": "consumer_price_inflation",
+        "country_iso3": "USA",
+        "observations": 15,
+        "year_min": 2010,
+        "year_max": 2024,
+        "status": "available"
+      },
+      {
+        "expense_category": "consumer_price_inflation",
+        "country_iso3": "GBR",
+        "observations": 15,
+        "year_min": 2010,
+        "year_max": 2024,
+        "status": "available"
+      },
+      {
+        "expense_category": "consumer_price_inflation",
+        "country_iso3": "JPN",
+        "observations": 15,
+        "year_min": 2010,
+        "year_max": 2024,
+        "status": "available"
+      },
+      {
+        "expense_category": "household_consumption_per_capita",
+        "country_iso3": "IND",
+        "observations": 15,
+        "year_min": 2010,
+        "year_max": 2024,
+        "status": "available"
+      },
+      {
+        "expense_category": "household_consumption_per_capita",
+        "country_iso3": "DEU",
+        "observations": 15,
+        "year_min": 2010,
+        "year_max": 2024,
+        "status": "available"
+      },
+      {
+        "expense_category": "household_consumption_per_capita",
+        "country_iso3": "CAN",
+        "observations": 15,
+        "year_min": 2010,
+        "year_max": 2024,
+        "status": "available"
+      },
+      {
+        "expense_category": "household_consumption_per_capita",
+        "country_iso3": "USA",
+        "observations": 15,
+        "year_min": 2010,
+        "year_max": 2024,
+        "status": "available"
+      },
+      {
+        "expense_category": "household_consumption_per_capita",
+        "country_iso3": "GBR",
+        "observations": 15,
+        "year_min": 2010,
+        "year_max": 2024,
+        "status": "available"
+      },
+      {
+        "expense_category": "household_consumption_per_capita",
+        "country_iso3": "JPN",
+        "observations": 15,
+        "year_min": 2010,
+        "year_max": 2024,
+        "status": "available"
+      },
+      {
+        "expense_category": "ppp_gdp",
+        "country_iso3": "IND",
+        "observations": 15,
+        "year_min": 2010,
+        "year_max": 2024,
+        "status": "available"
+      },
+      {
+        "expense_category": "ppp_gdp",
+        "country_iso3": "DEU",
+        "observations": 15,
+        "year_min": 2010,
+        "year_max": 2024,
+        "status": "available"
+      },
+      {
+        "expense_category": "ppp_gdp",
+        "country_iso3": "CAN",
+        "observations": 15,
+        "year_min": 2010,
+        "year_max": 2024,
+        "status": "available"
+      },
+      {
+        "expense_category": "ppp_gdp",
+        "country_iso3": "USA",
+        "observations": 15,
+        "year_min": 2010,
+        "year_max": 2024,
+        "status": "available"
+      },
+      {
+        "expense_category": "ppp_gdp",
+        "country_iso3": "GBR",
+        "observations": 15,
+        "year_min": 2010,
+        "year_max": 2024,
+        "status": "available"
+      },
+      {
+        "expense_category": "ppp_gdp",
+        "country_iso3": "JPN",
+        "observations": 15,
+        "year_min": 2010,
+        "year_max": 2024,
+        "status": "available"
+      },
+      {
+        "expense_category": "ppp_private_consumption",
+        "country_iso3": "IND",
+        "observations": 15,
+        "year_min": 2010,
+        "year_max": 2024,
+        "status": "available"
+      },
+      {
+        "expense_category": "ppp_private_consumption",
+        "country_iso3": "DEU",
+        "observations": 15,
+        "year_min": 2010,
+        "year_max": 2024,
+        "status": "available"
+      },
+      {
+        "expense_category": "ppp_private_consumption",
+        "country_iso3": "CAN",
+        "observations": 15,
+        "year_min": 2010,
+        "year_max": 2024,
+        "status": "available"
+      },
+      {
+        "expense_category": "ppp_private_consumption",
+        "country_iso3": "USA",
+        "observations": 15,
+        "year_min": 2010,
+        "year_max": 2024,
+        "status": "available"
+      },
+      {
+        "expense_category": "ppp_private_consumption",
+        "country_iso3": "GBR",
+        "observations": 15,
+        "year_min": 2010,
+        "year_max": 2024,
+        "status": "available"
+      },
+      {
+        "expense_category": "ppp_private_consumption",
+        "country_iso3": "JPN",
+        "observations": 15,
+        "year_min": 2010,
+        "year_max": 2024,
+        "status": "available"
+      }
+    ]
+  },
+  "missing_data": [
+    {
+      "dataset": "salary",
+      "scope": "JPN",
+      "issue": "No occupation-level earnings observations for Japan in the ILOSTAT series used.",
+      "treatment": "Shown as unavailable; no estimate is substituted."
+    },
+    {
+      "dataset": "salary",
+      "scope": "CAN",
+      "issue": "Canada reports occupation earnings under ISCO-88 rather than ISCO-08.",
+      "treatment": "Included with an explicit ISCO-88 major-group mapping and classification flag; not silently harmonised."
+    },
+    {
+      "dataset": "employment",
+      "scope": "CAN \u2014 AI and automotive",
+      "issue": "Canada reports ISIC Rev.3, which does not isolate information/communication (J) or motor-vehicle manufacturing (C29).",
+      "treatment": "These Canada sector series are shown as unavailable rather than approximated."
+    },
+    {
+      "dataset": "country_sector",
+      "scope": "investment_announced / investment_realized",
+      "issue": "Sector-specific announced and realized investment are not available from the free official sources used.",
+      "treatment": "Columns are present but empty; the interface labels them unavailable."
+    },
+    {
+      "dataset": "employment",
+      "scope": "vacancies / vacancy_rate",
+      "issue": "Harmonised vacancy series across all six countries were not acquired.",
+      "treatment": "Columns are present but empty; vacancy views are disabled."
+    },
+    {
+      "dataset": "living_cost",
+      "scope": "city-level expenses",
+      "issue": "City-level expense observations are not available in the official series used; values are national.",
+      "treatment": "City is recorded as 'National'; no city-level estimate is fabricated."
+    },
+    {
+      "dataset": "country_sector",
+      "scope": "capacity_addition",
+      "issue": "Installed-capacity additions by sector are not available in the free series used.",
+      "treatment": "Column is present but empty."
+    }
+  ],
+  "sources": [
+    {
+      "id": "world_bank_wdi",
+      "name": "World Bank \u2014 World Development Indicators",
+      "url": "https://data.worldbank.org/",
+      "api": "https://api.worldbank.org/v2/",
+      "license": "CC BY 4.0 (World Bank open data)",
+      "retrieved_at": "2026-11-22T09:33:45Z",
+      "used_for": [
+        "country_sector indicators",
+        "country context",
+        "living cost indicators",
+        "salary deflators and PPP conversion"
+      ]
+    },
+    {
+      "id": "ilostat",
+      "name": "ILOSTAT \u2014 International Labour Organization",
+      "url": "https://ilostat.ilo.org/",
+      "api": "https://rplumber.ilo.org/data/indicator",
+      "license": "ILO open data (CC BY 4.0 unless otherwise stated)",
+      "retrieved_at": "2026-11-22T09:33:45Z",
+      "used_for": [
+        "employment by industry and occupation",
+        "mean and median monthly earnings by occupation"
+      ]
+    }
+  ],
+  "method_notes": {
+    "employment": "ILOSTAT employment by economic activity \u00d7 occupation. Section-level rows are available for all six countries and are broad proxies. Division-level rows are available only where ILOSTAT publishes ISIC Rev.4 two-digit data (India, Japan, United Kingdom, United States).",
+    "salary": "ILOSTAT average monthly earnings of employees by occupation, local currency, nominal. Real values use World Bank CPI (2010 = 100). PPP values divide by the World Bank private-consumption PPP conversion factor. No currency conversion is applied without one of these documented methods.",
+    "country_sector": "World Bank WDI indicators mapped to sectors as documented proxies. industrial_output is populated only for indicators with role='output'; all indicators also expose indicator_value and indicator_role.",
+    "living_cost": "National-level World Bank price and consumption indicators. City-level expense data has not been acquired.",
+    "forecast": "Forecasts are produced separately by scripts/forecast.py and are never mixed into historical files."
+  }
+}
