@@ -152,13 +152,22 @@ export default function OverviewPage() {
 
   const renewableSeries = React.useMemo(() => {
     const groups = groupRows(renewableRows, (row) => row.country_iso3);
-    return Object.entries(groups).map(([iso3, rows]) => ({
-      name: countryNames[iso3] ?? iso3,
-      color: COUNTRY_COLORS[iso3],
-      points: rows
-        .sort((a, b) => a.year - b.year)
-        .map((row) => ({ year: row.year, value: toNumber(row.indicator_value) })),
-    }));
+    return Object.entries(groups).map(([iso3, rows]) => {
+      const yearMap = new Map<number, number>();
+      for (const row of rows) {
+        const val = toNumber(row.indicator_value);
+        if (val != null && !yearMap.has(row.year)) {
+          yearMap.set(row.year, val);
+        }
+      }
+      return {
+        name: countryNames[iso3] ?? iso3,
+        color: COUNTRY_COLORS[iso3],
+        points: Array.from(yearMap.entries())
+          .map(([year, value]) => ({ year, value }))
+          .sort((a, b) => a.year - b.year),
+      };
+    });
   }, [renewableRows, countryNames]);
 
   const coverageData = React.useMemo(() => {
@@ -464,11 +473,11 @@ export default function OverviewPage() {
           option={timeSeriesOption({
             series: renewableSeries,
             xMin: from,
-            xMax: to,
+            xMax: Math.max(from + 1, to),
             yName: "% of electricity output",
             valueFormatter: (value) => `${value.toFixed(1)}%`,
           })}
-          height={330}
+          height={460}
           source={{
             name: "World Bank WDI — EG.ELC.RNEW.ZS",
             url: "https://data.worldbank.org/indicator/EG.ELC.RNEW.ZS",
@@ -503,7 +512,7 @@ export default function OverviewPage() {
             max: 100,
             valueLabel: "%",
           })}
-          height={330}
+          height={460}
           source={{
             name: "Computed from processed World Bank series",
             note: "Expected cells = available indicators × 15 annual years.",

@@ -33,9 +33,21 @@ class SectorDefinition:
     sector_name: str
     sector_definition: str
     official_industry_codes: List[str]
-    direct_indicators: List[SectorIndicator]
-    proxy_indicators: List[SectorIndicator]
-    mapping_limitations: str
+    direct_indicators: Optional[List[SectorIndicator]] = None
+    proxy_indicators: Optional[List[SectorIndicator]] = None
+    mapping_limitations: str = ""
+
+    def __post_init__(self):
+        if self.direct_indicators is None:
+            self.direct_indicators = []
+        if self.proxy_indicators is None:
+            self.proxy_indicators = []
+        if self.direct_indicators and not self.proxy_indicators:
+            proxies = [i for i in self.direct_indicators if getattr(i, 'is_proxy', False)]
+            directs = [i for i in self.direct_indicators if not getattr(i, 'is_proxy', False)]
+            if proxies:
+                self.proxy_indicators = proxies
+                self.direct_indicators = directs
 
 
 # Sector definitions

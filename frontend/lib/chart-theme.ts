@@ -1,12 +1,21 @@
 import type { EChartsOption, SeriesOption } from "echarts";
 
 export const CHART_COLORS = [
-  "#2457A6",
   "#0E6B62",
+  "#D9383A",
+  "#2457A6",
+  "#5B6B7C",
   "#A9661B",
   "#6B4C9A",
+  "#1F78B4",
+  "#2CA02C",
   "#A63D57",
-  "#5B6B7C",
+  "#33A02C",
+  "#0099C6",
+  "#D95F02",
+  "#E6AB02",
+  "#E7298A",
+  "#7570B3",
 ];
 
 export const SECTOR_COLORS: Record<string, string> = {
@@ -18,12 +27,21 @@ export const SECTOR_COLORS: Record<string, string> = {
 };
 
 export const COUNTRY_COLORS: Record<string, string> = {
-  IND: "#A9661B",
-  DEU: "#2457A6",
-  CAN: "#A63D57",
   USA: "#0E6B62",
-  GBR: "#6B4C9A",
+  CHN: "#D9383A",
+  DEU: "#2457A6",
   JPN: "#5B6B7C",
+  IND: "#A9661B",
+  GBR: "#6B4C9A",
+  FRA: "#1F78B4",
+  ITA: "#2CA02C",
+  CAN: "#A63D57",
+  BRA: "#33A02C",
+  KOR: "#0099C6",
+  MEX: "#D95F02",
+  AUS: "#E6AB02",
+  ESP: "#E7298A",
+  IDN: "#7570B3",
 };
 
 export const INK = "#101720";
@@ -54,15 +72,19 @@ export function baseOption(): EChartsOption {
     animationDuration: 450,
     animationEasing: "cubicOut",
     textStyle: { fontFamily: "var(--font-sans)", color: INK },
-    grid: { left: 18, right: 26, top: 34, bottom: 42, containLabel: true },
+    grid: { left: 16, right: 24, top: 48, bottom: 42, containLabel: true },
     legend: {
-      top: 0,
-      left: 0,
+      top: 2,
+      right: 12,
+      type: "scroll",
       icon: "roundRect",
       itemWidth: 10,
       itemHeight: 10,
-      itemGap: 16,
+      itemGap: 14,
       textStyle: { color: MUTED, fontSize: 11 },
+      pageTextStyle: { color: MUTED, fontSize: 10 },
+      pageIconColor: MUTED,
+      pageIconInactiveColor: "#DED8CB",
     },
     tooltip: {
       trigger: "axis",
@@ -122,9 +144,9 @@ export function timeSeriesOption({
       name: item.name,
       type: "line",
       data: item.points.map((point) => [point.year, point.value]),
-      showSymbol: false,
+      showSymbol: item.points.length <= 2,
       symbol: "circle",
-      symbolSize: 6,
+      symbolSize: item.points.length <= 2 ? 6 : 4,
       connectNulls: false,
       smooth: false,
       lineStyle: {
@@ -177,12 +199,30 @@ export function timeSeriesOption({
     z: 1,
   })) as unknown as SeriesOption[];
 
+  const safeXMin = Number.isFinite(xMin) ? Math.round(xMin) : 2010;
+  const safeXMax = Number.isFinite(xMax) && xMax > safeXMin ? Math.round(xMax) : safeXMin + 1;
+  const xDiff = safeXMax - safeXMin;
+
   return {
     ...option,
     ...extraOptions,
     legend: {
       ...(option.legend as object),
       show: showLegend,
+      type: "scroll",
+      top: 0,
+      right: 12,
+      pageIconSize: 10,
+      pageTextStyle: { fontSize: 10, color: MUTED },
+      textStyle: { fontSize: 11, color: INK },
+    },
+    grid: {
+      ...(option.grid as object),
+      top: showLegend ? 58 : 32,
+      bottom: 46,
+      left: 16,
+      right: 24,
+      containLabel: true,
     },
     tooltip: {
       ...(option.tooltip as object),
@@ -211,16 +251,21 @@ export function timeSeriesOption({
     },
     xAxis: {
       type: "value",
-      min: xMin,
-      max: xMax,
-      interval: xMax - xMin > 12 ? 2 : 1,
+      min: safeXMin,
+      max: safeXMax,
+      interval: xDiff <= 1 ? 1 : xDiff > 12 ? 2 : 1,
+      splitNumber: Math.min(Math.max(xDiff, 2), 8),
       axisLine: { lineStyle: { color: LINE } },
       axisTick: { show: false },
-      axisLabel: { ...AXIS_LABEL, formatter: (value: number) => String(Math.round(value)) },
+      axisLabel: {
+        ...AXIS_LABEL,
+        hideOverlap: true,
+        formatter: (value: number) => String(Math.round(value)),
+      },
       splitLine: { show: false },
       name: "Year",
       nameLocation: "middle",
-      nameGap: 30,
+      nameGap: 24,
       nameTextStyle: { color: MUTED, fontSize: 10 },
     },
     yAxis: {
@@ -233,8 +278,14 @@ export function timeSeriesOption({
       },
       splitLine: SPLIT_LINE,
       name: yName,
-      nameTextStyle: { color: MUTED, fontSize: 10, align: "left" },
-      nameGap: 18,
+      nameLocation: "end",
+      nameTextStyle: {
+        color: MUTED,
+        fontSize: 10,
+        align: "left",
+        padding: [0, 0, 6, 0],
+      },
+      nameGap: 12,
       scale: true,
     },
     dataZoom: zoom
@@ -283,7 +334,12 @@ export function barOption({
     data: categories,
     axisLine: { lineStyle: { color: LINE } },
     axisTick: { show: false },
-    axisLabel: { ...AXIS_LABEL, interval: 0, width: 150, overflow: "truncate" as const },
+    axisLabel: {
+      ...AXIS_LABEL,
+      interval: 0,
+      width: horizontal ? 140 : 100,
+      overflow: "truncate" as const,
+    },
   };
   const valueAxis = {
     type: "value" as const,
@@ -292,14 +348,37 @@ export function barOption({
     axisLabel: { ...AXIS_LABEL, formatter: (value: number) => compactAxis(value) },
     splitLine: SPLIT_LINE,
     name: yName,
-    nameTextStyle: { color: MUTED, fontSize: 10 },
+    nameLocation: horizontal ? ("middle" as const) : ("end" as const),
+    nameGap: horizontal ? 32 : 14,
+    nameTextStyle: {
+      color: MUTED,
+      fontSize: 10,
+      align: horizontal ? ("center" as const) : ("left" as const),
+      padding: horizontal ? [8, 0, 0, 0] : [0, 0, 8, 0],
+    },
     scale: true,
   };
 
   return {
     ...option,
     ...extraOptions,
-    legend: { ...(option.legend as object), show: showLegend },
+    legend: {
+      ...(option.legend as object),
+      show: showLegend,
+      type: "scroll",
+      top: 0,
+      right: 12,
+      pageIconSize: 10,
+      pageTextStyle: { fontSize: 10, color: MUTED },
+      textStyle: { fontSize: 11, color: INK },
+    },
+    grid: {
+      left: horizontal ? 130 : 16,
+      right: 24,
+      top: showLegend ? 52 : 26,
+      bottom: horizontal ? 46 : 38,
+      containLabel: true,
+    },
     tooltip: {
       ...(option.tooltip as object),
       trigger: "axis",
@@ -323,14 +402,6 @@ export function barOption({
           .join("");
         return `<div style="min-width:170px"><div style="font-family:var(--font-mono);font-size:11px;color:#A9A294">${list[0].axisValueLabel ?? list[0].name}</div>${rows}</div>`;
       },
-    },
-    grid: {
-      ...(option.grid as object),
-      left: horizontal ? 10 : 18,
-      right: horizontal ? 34 : 20,
-      top: showLegend ? 36 : 16,
-      bottom: horizontal ? 18 : 46,
-      containLabel: true,
     },
     xAxis: horizontal ? valueAxis : categoryAxis,
     yAxis: horizontal ? categoryAxis : valueAxis,
@@ -360,7 +431,7 @@ export function heatmapOption({
   return {
     ...baseOption(),
     ...extraOptions,
-    grid: { left: 18, right: 24, top: 12, bottom: 52, containLabel: true },
+    grid: { left: 18, right: 24, top: 12, bottom: 68, containLabel: true },
     tooltip: {
       ...TOOLTIP_STYLE,
       formatter: (params: any) => {
@@ -374,7 +445,14 @@ export function heatmapOption({
       data: xLabels,
       axisLine: { lineStyle: { color: LINE } },
       axisTick: { show: false },
-      axisLabel: { ...AXIS_LABEL, interval: 0, rotate: xLabels.length > 6 ? 24 : 0 },
+      axisLabel: {
+        ...AXIS_LABEL,
+        interval: 0,
+        rotate: 28,
+        overflow: "truncate",
+        width: 85,
+        margin: 10,
+      },
       splitArea: { show: false },
     },
     yAxis: {
@@ -382,7 +460,7 @@ export function heatmapOption({
       data: yLabels,
       axisLine: { lineStyle: { color: LINE } },
       axisTick: { show: false },
-      axisLabel: { ...AXIS_LABEL, interval: 0 },
+      axisLabel: { ...AXIS_LABEL, interval: 0, fontSize: yLabels.length > 10 ? 10 : 11 },
       splitArea: { show: false },
     },
     visualMap: {
@@ -391,9 +469,9 @@ export function heatmapOption({
       calculable: false,
       orient: "horizontal",
       left: "center",
-      bottom: 0,
+      bottom: 2,
       itemWidth: 12,
-      itemHeight: 80,
+      itemHeight: 70,
       textStyle: { color: MUTED, fontSize: 10 },
       inRange: { color: colorRange },
     },

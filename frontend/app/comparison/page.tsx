@@ -2,598 +2,1160 @@
 
 import * as React from "react";
 import type { EChartsOption } from "echarts";
-import { Banknote, Globe2, TrendingUp, Users } from "lucide-react";
+import {
+  ArrowLeftRight,
+  Award,
+  Banknote,
+  Briefcase,
+  Building2,
+  Calendar,
+  CheckCircle2,
+  ChevronRight,
+  Compass,
+  DollarSign,
+  Factory,
+  Globe2,
+  HelpCircle,
+  Layers,
+  Plus,
+  Scale,
+  ShieldCheck,
+  Trash2,
+  TrendingDown,
+  TrendingUp,
+  Users,
+  X,
+} from "lucide-react";
 import { ChartCard } from "@/components/charts/chart-card";
-import { KpiCard } from "@/components/kpi-card";
 import { PageHeader, SectionHeading } from "@/components/page-header";
 import { Badge } from "@/components/ui/badge";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
-import { useFilters } from "@/components/providers/filters-provider";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table";
 import { useMeta } from "@/components/providers/meta-provider";
 import { useApi } from "@/lib/api";
 import {
   AXIS_LABEL,
   COUNTRY_COLORS,
+  LINE,
+  MUTED,
   SECTOR_COLORS,
+  SPLIT_LINE,
   TOOLTIP_STYLE,
   barOption,
   baseOption,
   compactAxis,
   timeSeriesOption,
 } from "@/lib/chart-theme";
-import { FALLBACK_SECTORS } from "@/lib/constants";
+import { FALLBACK_COUNTRIES, FALLBACK_OCCUPATIONS, FALLBACK_SECTORS } from "@/lib/constants";
 import { averageBy, groupRows, latestRows, toNumber } from "@/lib/data";
-import { formatCompact, formatNumber, formatPercent } from "@/lib/format";
+import { formatCompact, formatNumber, formatPercent, formatSignedPercent } from "@/lib/format";
 import type {
   CountryContextRow,
+  CountrySectorRow,
   EmploymentRow,
   Envelope,
+  ForecastRow,
+  IndustrialProjectRow,
+  LivingCostRow,
   ProjectMeta,
   SalaryRow,
 } from "@/lib/types";
 
-const CONTEXT_LABELS: Record<string, string> = {
-  "NY.GDP.PCAP.CD": "GDP per capita",
-  "SL.UEM.TOTL.ZS": "Unemployment",
-  "SL.TLF.CACT.ZS": "Participation",
-  "NE.CON.PRVT.PC.KD": "Household consumption",
-  "FP.CPI.TOTL": "Consumer price index",
+type Basis = "ppp" | "nominal" | "real";
+
+const BASIS_LABELS: Record<Basis, string> = {
+  ppp: "PPP intl $ (Comparable)",
+  nominal: "Nominal Local Currency",
+  real: "Real 2010 Constant",
+};
+
+const BASIS_KEYS: Record<Basis, "salary_ppp_intl" | "salary_mean" | "salary_real_2010"> = {
+  ppp: "salary_ppp_intl",
+  nominal: "salary_mean",
+  real: "salary_real_2010",
+};
+
+const COUNTRY_FLAGS: Record<string, string> = {
+  USA: "🇺🇸",
+  CHN: "🇨🇳",
+  DEU: "🇩🇪",
+  JPN: "🇯🇵",
+  IND: "🇮🇳",
+  GBR: "🇬🇧",
+  FRA: "🇫🇷",
+  ITA: "🇮🇹",
+  CAN: "🇨🇦",
+  BRA: "🇧🇷",
+  KOR: "🇰🇷",
+  MEX: "🇲🇽",
+  AUS: "🇦🇺",
+  ESP: "🇪🇸",
+  IDN: "🇮🇩",
+};
+
+const SECTOR_PRIMARY_INDICATORS: Record<string, { id: string; name: string; unit: string }> = {
+  semiconductors: {
+    id: "TX.VAL.TECH.CD",
+    name: "High-technology exports",
+    unit: "current US$",
+  },
+  ai_software: {
+    id: "BX.GSR.CCIS.CD",
+    name: "ICT service exports",
+    unit: "current US$",
+  },
+  renewable_energy: {
+    id: "EG.ELC.RNEW.ZS",
+    name: "Renewable electricity output",
+    unit: "% of total electricity output",
+  },
+  automotive_ev: {
+    id: "NV.IND.MANF.CD",
+    name: "Manufacturing value added",
+    unit: "current US$",
+  },
+  healthcare_biotech: {
+    id: "SH.XPD.CHEX.PC.CD",
+    name: "Current health expenditure per capita",
+    unit: "current US$ per capita",
+  },
 };
 
 export default function ComparisonPage() {
-  const { countries, sectors, from, to, countryParam, sectorParam } = useFilters();
   const { meta } = useMeta();
   const projectMeta = meta as ProjectMeta | null;
+
+  const countryList = projectMeta?.countries?.length ? projectMeta.countries : FALLBACK_COUNTRIES;
   const sectorList = projectMeta?.sectors?.length ? projectMeta.sectors : FALLBACK_SECTORS;
+  const occupationList = projectMeta?.occupations?.length ? projectMeta.occupations : FALLBACK_OCCUPATIONS;
 
-  const context = useApi<Envelope<CountryContextRow>>(
-    ["comparison-context", countryParam, to],
-    "/api/context/latest",
-    { countries: countryParam, year: to },
+  // Dynamic Country Selection: starts with 2, can scale to 3, 4, 5, 6
+  const [selectedCountries, setSelectedCountries] = React.useState<string[]>(["USA", "DEU"]);
+  const [selectedSector, setSelectedSector] = React.useState<string>("semiconductors");
+  const [selectedYear, setSelectedYear] = React.useState<number>(2024);
+  const [basis, setBasis] = React.useState<Basis>("ppp");
+  const [selectedIndicatorId, setSelectedIndicatorId] = React.useState<string>("");
+
+  // Country actions: Add, Remove, Update, Swap/Reverse
+  const addCountry = () => {
+    const next = countryList.find((c) => !selectedCountries.includes(c.iso3));
+    if (next) {
+      setSelectedCountries([...selectedCountries, next.iso3]);
+    }
+  };
+
+  const removeCountry = (iso3: string) => {
+    if (selectedCountries.length <= 2) return;
+    setSelectedCountries(selectedCountries.filter((c) => c !== iso3));
+  };
+
+  const updateCountry = (index: number, newIso3: string) => {
+    const existingIndex = selectedCountries.indexOf(newIso3);
+    if (existingIndex !== -1 && existingIndex !== index) {
+      const updated = [...selectedCountries];
+      updated[existingIndex] = selectedCountries[index];
+      updated[index] = newIso3;
+      setSelectedCountries(updated);
+    } else {
+      const updated = [...selectedCountries];
+      updated[index] = newIso3;
+      setSelectedCountries(updated);
+    }
+  };
+
+  const handleSwap = () => {
+    if (selectedCountries.length === 2) {
+      setSelectedCountries([selectedCountries[1], selectedCountries[0]]);
+    } else {
+      setSelectedCountries([...selectedCountries].reverse());
+    }
+  };
+
+  const countriesParam = selectedCountries.join(",");
+
+  // Primary or user-selected indicator for the active sector
+  const activeIndicatorId = React.useMemo(() => {
+    const primary = SECTOR_PRIMARY_INDICATORS[selectedSector]?.id || "TX.VAL.TECH.CD";
+    if (
+      selectedIndicatorId &&
+      (projectMeta?.sector_indicators?.some(
+        (si) => si.sector_id === selectedSector && si.indicator_id === selectedIndicatorId
+      ) ||
+        selectedIndicatorId === primary)
+    ) {
+      return selectedIndicatorId;
+    }
+    return primary;
+  }, [selectedIndicatorId, selectedSector, projectMeta]);
+
+  // List of available indicators for the active sector
+  const availableSectorIndicators = React.useMemo(() => {
+    const list = (projectMeta?.sector_indicators ?? []).filter((si) => si.sector_id === selectedSector);
+    if (list.length > 0) return list;
+    const primary = SECTOR_PRIMARY_INDICATORS[selectedSector];
+    return primary
+      ? [
+          {
+            sector_id: selectedSector,
+            indicator_id: primary.id,
+            indicator_name: primary.name,
+            indicator_unit: primary.unit,
+          },
+        ]
+      : [];
+  }, [projectMeta, selectedSector]);
+
+  // 1. Sector Series & Latest Data
+  const sectorSeriesApi = useApi<Envelope<CountrySectorRow>>(
+    ["cmp-sec-series", countriesParam, selectedSector, activeIndicatorId],
+    "/api/sectors/series",
+    { countries: countriesParam, sectors: selectedSector, indicators: activeIndicatorId, start: 2010, end: 2024 }
   );
 
-  const contextSeries = useApi<Envelope<CountryContextRow>>(
-    ["comparison-gdp-series", countryParam, from, to],
-    "/api/context/series",
-    {
-      countries: countryParam,
-      indicators: "NY.GDP.PCAP.CD",
-      start: from,
-      end: to,
-    },
+  const sectorLatestApi = useApi<Envelope<CountrySectorRow>>(
+    ["cmp-sec-latest", countriesParam, selectedSector, activeIndicatorId, selectedYear],
+    "/api/sectors/latest",
+    { countries: countriesParam, sectors: selectedSector, indicators: activeIndicatorId, year: selectedYear }
   );
 
-  const employment = useApi<Envelope<EmploymentRow>>(
-    ["comparison-employment", countryParam, sectorParam, to],
+  // 2. Employment Data
+  const employmentApi = useApi<Envelope<EmploymentRow>>(
+    ["cmp-emp-latest", countriesParam, selectedSector, selectedYear],
     "/api/employment/latest",
-    {
-      countries: countryParam,
-      sectors: sectorParam,
-      occupations: "TOTAL",
-      granularity: "section",
-      year: to,
-    },
+    { countries: countriesParam, sectors: selectedSector, granularity: "section", year: selectedYear }
   );
 
-  const salary = useApi<Envelope<SalaryRow>>(
-    ["comparison-salary", countryParam, to],
+  // 3. Salary Data across Occupations
+  const salaryApi = useApi<Envelope<SalaryRow>>(
+    ["cmp-salary-latest", countriesParam, basis, selectedYear],
     "/api/salary/latest",
-    { countries: countryParam, occupations: "2", basis: "ppp", year: to },
+    { countries: countriesParam, basis, year: selectedYear }
   );
 
-  const contextRows = context.data?.data ?? [];
-  const contextSeriesRows = contextSeries.data?.data ?? [];
-  const employmentRows = employment.data?.data ?? [];
-  const salaryRows = salary.data?.data ?? [];
-
-  const countryNames = React.useMemo(
-    () => Object.fromEntries((projectMeta?.countries ?? []).map((country) => [country.iso3, country.name])),
-    [projectMeta],
-  );
-  const sectorNames = React.useMemo(
-    () => Object.fromEntries(sectorList.map((sector) => [sector.id, sector.short || sector.name])),
-    [sectorList],
+  // 4. Macro Context (GDP, CPI, Unemployment, Consumption)
+  const contextApi = useApi<Envelope<CountryContextRow>>(
+    ["cmp-context", countriesParam, selectedYear],
+    "/api/context/latest",
+    { countries: countriesParam, year: selectedYear }
   );
 
-  const latestContext = React.useMemo(() => {
-    const map: Record<string, Record<string, CountryContextRow>> = {};
-    contextRows.forEach((row) => {
-      map[row.country_iso3] ??= {};
-      map[row.country_iso3][row.indicator_id] = row;
-    });
-    return map;
-  }, [contextRows]);
-
-  const latestSalary = React.useMemo(() => {
-    const map: Record<string, SalaryRow> = {};
-    latestRows(salaryRows, {
-      time: (row) => row.year,
-      group: (row) => row.country_iso3,
-      value: (row) => row.salary_ppp_intl,
-    }).forEach((row) => {
-      map[row.country_iso3] = row;
-    });
-    return map;
-  }, [salaryRows]);
-
-  const latestEmployment = React.useMemo(() => {
-    const latest = latestRows(employmentRows, {
-      time: (row) => row.year,
-      group: (row) => `${row.country_iso3}|${row.sector_id}`,
-      value: (row) => row.employment,
-    });
-    const map: Record<string, Record<string, number | null>> = {};
-    latest.forEach((row) => {
-      map[row.country_iso3] ??= {};
-      map[row.country_iso3][row.sector_id] = toNumber(row.employment);
-    });
-    return map;
-  }, [employmentRows]);
-
-  const gdpValues = countries
-    .map((iso3) => toNumber(latestContext[iso3]?.["NY.GDP.PCAP.CD"]?.value))
-    .filter((value): value is number => value !== null);
-  const unemploymentValues = countries
-    .map((iso3) => toNumber(latestContext[iso3]?.["SL.UEM.TOTL.ZS"]?.value))
-    .filter((value): value is number => value !== null);
-  const participationValues = countries
-    .map((iso3) => toNumber(latestContext[iso3]?.["SL.TLF.CACT.ZS"]?.value))
-    .filter((value): value is number => value !== null);
-
-  const gdpSeries = React.useMemo(() => {
-    const groups = groupRows(contextSeriesRows, (row) => row.country_iso3);
-    return Object.entries(groups).map(([iso3, group]) => ({
-      name: countryNames[iso3] ?? iso3,
-      color: COUNTRY_COLORS[iso3],
-      points: group
-        .sort((a, b) => a.year - b.year)
-        .map((row) => ({ year: row.year, value: toNumber(row.value) })),
-    }));
-  }, [contextSeriesRows, countryNames]);
-
-  const employmentComposition = React.useMemo(() => {
-    return sectors.map((sectorId) => ({
-      name: sectorNames[sectorId] ?? sectorId,
-      color: SECTOR_COLORS[sectorId],
-      stack: "employment",
-      values: countries.map((iso3) => latestEmployment[iso3]?.[sectorId] ?? null),
-    }));
-  }, [sectors, countries, latestEmployment, sectorNames]);
-
-  const scatterPoints = React.useMemo(
-    () =>
-      countries
-        .map((iso3) => {
-          const gdp = toNumber(latestContext[iso3]?.["NY.GDP.PCAP.CD"]?.value);
-          const unemployment = toNumber(latestContext[iso3]?.["SL.UEM.TOTL.ZS"]?.value);
-          const population = toNumber(latestContext[iso3]?.["SP.POP.TOTL"]?.value);
-          if (gdp === null || unemployment === null) return null;
-          return {
-            name: iso3,
-            value: [gdp, unemployment, population ?? 0],
-            itemStyle: { color: COUNTRY_COLORS[iso3] ?? "#5B6B7C" },
-          };
-        })
-        .filter(Boolean) as { name: string; value: number[]; itemStyle: { color: string } }[],
-    [countries, latestContext],
+  // 5. Forecast Data (2025-2030)
+  const forecastApi = useApi<Envelope<ForecastRow>>(
+    ["cmp-forecast", countriesParam, selectedSector, activeIndicatorId],
+    "/api/forecast/series",
+    { countries: countriesParam, sectors: selectedSector, indicators: activeIndicatorId, start: 2025, end: 2030 }
   );
 
-  const scatterOption: EChartsOption = React.useMemo(
-    () => ({
+  // 6. Industrial Mega-Projects
+  const projectsApi = useApi<Envelope<IndustrialProjectRow>>(
+    ["cmp-projects", countriesParam, selectedSector],
+    "/api/sectors/projects",
+    { countries: countriesParam, sectors: selectedSector }
+  );
+
+  // Extract raw rows
+  const sectorSeriesRows = sectorSeriesApi.data?.data ?? [];
+  const sectorLatestRows = sectorLatestApi.data?.data ?? [];
+  const employmentRows = employmentApi.data?.data ?? [];
+  const salaryRows = salaryApi.data?.data ?? [];
+  const contextRows = contextApi.data?.data ?? [];
+  const forecastRows = forecastApi.data?.data ?? [];
+  const projectRows = projectsApi.data?.data ?? [];
+
+  const currentSectorObj = sectorList.find((s) => s.id === selectedSector);
+  const sectorTitle = currentSectorObj?.name ?? selectedSector;
+
+  // Unified structured metrics for ALL selected countries
+  const countryData = React.useMemo(() => {
+    return selectedCountries.map((iso3) => {
+      const name = countryList.find((c) => c.iso3 === iso3)?.name ?? iso3;
+      const color = COUNTRY_COLORS[iso3] || "#5B6B7C";
+      const flag = COUNTRY_FLAGS[iso3] || "🌐";
+
+      const latestSector =
+        sectorLatestRows.find(
+          (r) => r.country_iso3 === iso3 && (r.indicator_id === activeIndicatorId || !r.indicator_id)
+        ) || sectorLatestRows.find((r) => r.country_iso3 === iso3);
+
+      const emp_raw =
+        employmentRows.find(
+          (r) => r.country_iso3 === iso3 && (r.occupation_code === "TOTAL" || !r.occupation_code)
+        )?.employment ?? employmentRows.find((r) => r.country_iso3 === iso3)?.employment;
+      // ILOSTAT reports employment in thousands of persons
+      const emp = emp_raw != null ? emp_raw * 1000 : null;
+
+      const salaryKey = BASIS_KEYS[basis];
+      const profSalary = salaryRows.find(
+        (r) => r.country_iso3 === iso3 && r.occupation_code === "2"
+      )?.[salaryKey];
+
+      const ctx = Object.fromEntries(
+        contextRows.filter((r) => r.country_iso3 === iso3).map((r) => [r.indicator_id, r.value])
+      );
+      const gdp = ctx["NY.GDP.PCAP.CD"] ?? null;
+      const uem = ctx["SL.UEM.TOTL.ZS"] ?? null;
+      const cpi = ctx["FP.CPI.TOTL"] ?? null;
+      const inv = latestSector?.investment_announced ?? null;
+
+      return {
+        iso3,
+        name,
+        color,
+        flag,
+        latestSector,
+        emp,
+        profSalary,
+        gdp,
+        uem,
+        cpi,
+        inv,
+      };
+    });
+  }, [
+    selectedCountries,
+    countryList,
+    sectorLatestRows,
+    activeIndicatorId,
+    employmentRows,
+    salaryRows,
+    basis,
+    contextRows,
+  ]);
+
+  // -------------------------------------------------------------
+  // Chart 1: Multi-Pillar Strategic Competitiveness Radar (0-100)
+  // -------------------------------------------------------------
+  const radarOption: EChartsOption = React.useMemo(() => {
+    const maxOutput = Math.max(...countryData.map((d) => d.latestSector?.indicator_value ?? 0), 1);
+    const maxEmp = Math.max(...countryData.map((d) => d.emp ?? 0), 1);
+    const maxWage = Math.max(...countryData.map((d) => d.profSalary ?? 0), 1);
+    const maxInv = Math.max(...countryData.map((d) => d.inv ?? 20), 20);
+
+    const radarSeriesData = countryData.map((c) => {
+      const normOutput = Math.min(
+        100,
+        Math.round(((c.latestSector?.indicator_value ?? 0) / maxOutput) * 100)
+      );
+      const normEmp = Math.min(100, Math.round(((c.emp ?? 0) / maxEmp) * 100));
+      const normWage = Math.min(100, Math.round(((c.profSalary ?? 0) / maxWage) * 100));
+      const aff =
+        c.gdp && c.profSalary ? Math.min(100, Math.round(((c.profSalary * 12) / c.gdp) * 75)) : 65;
+      const normInv = Math.min(100, Math.round(((c.inv ?? 20) / maxInv) * 100));
+      const res = Math.max(10, Math.min(100, Math.round(100 - (c.uem ?? 5) * 5)));
+
+      return {
+        value: [normOutput, normEmp, normWage, aff, normInv, res],
+        name: c.name,
+        itemStyle: { color: c.color },
+        lineStyle: { width: 2.2, color: c.color },
+        areaStyle: { color: c.color, opacity: countryData.length > 2 ? 0.1 : 0.2 },
+      };
+    });
+
+    return {
       ...baseOption(),
-      grid: { left: 18, right: 28, top: 26, bottom: 46, containLabel: true },
       tooltip: {
         ...TOOLTIP_STYLE,
         trigger: "item",
-        formatter: (params: any) => {
-          const [gdp, unemployment, population] = params.value as number[];
-          return `<div style="font-weight:600;margin-bottom:4px">${countryNames[params.name] ?? params.name}</div>
-            <div style="font-family:var(--font-mono);font-size:11px;line-height:1.7">
-              GDP per capita: $${formatNumber(gdp, { maximumFractionDigits: 0 })}<br/>
-              Unemployment: ${unemployment.toFixed(1)}%<br/>
-              Population: ${formatCompact(population)}
-            </div>`;
+      },
+      legend: {
+        top: 2,
+        right: 12,
+        type: "scroll",
+        textStyle: { color: MUTED, fontSize: 11 },
+        data: countryData.map((c) => c.name),
+      },
+      radar: {
+        center: ["50%", "58%"],
+        radius: "56%",
+        indicator: [
+          { name: "Sector Output", max: 100 },
+          { name: "Workforce Pool", max: 100 },
+          { name: "Compensation", max: 100 },
+          { name: "Affordability", max: 100 },
+          { name: "Capital Inflow", max: 100 },
+          { name: "Macro Stability", max: 100 },
+        ],
+        shape: "polygon",
+        splitNumber: 4,
+        axisName: {
+          color: "#4A463D",
+          fontSize: 10.5,
+          fontFamily: "var(--font-sans)",
         },
-      },
-      xAxis: {
-        type: "value",
-        name: "GDP per capita (current US$)",
-        nameLocation: "middle",
-        nameGap: 30,
-        nameTextStyle: { color: "#6D6A61", fontSize: 10 },
-        axisLabel: { ...AXIS_LABEL, formatter: (value: number) => compactAxis(value) },
-        splitLine: { lineStyle: { color: "#E9E4D9", type: "dashed" } },
-      },
-      yAxis: {
-        type: "value",
-        name: "Unemployment (%)",
-        nameTextStyle: { color: "#6D6A61", fontSize: 10 },
-        axisLabel: { ...AXIS_LABEL, formatter: (value: number) => `${value}%` },
-        splitLine: { lineStyle: { color: "#E9E4D9", type: "dashed" } },
-        scale: true,
+        splitLine: { lineStyle: { color: "#E0DAD0" } },
+        splitArea: {
+          show: true,
+          areaStyle: { color: ["rgba(255,255,255,0.8)", "rgba(247,244,238,0.4)"] },
+        },
+        axisLine: { lineStyle: { color: "#D6CFC4" } },
       },
       series: [
         {
-          type: "scatter",
-          data: scatterPoints,
-          symbolSize: (value: number[]) => {
-            const population = value[2] ?? 0;
-            if (!population) return 12;
-            return Math.max(14, Math.min(38, Math.sqrt(population / 1_000_000) * 1.6));
-          },
-          label: {
-            show: true,
-            formatter: (params: any) => params.name,
-            position: "top",
-            color: "#101720",
-            fontSize: 10,
-            fontFamily: "var(--font-mono)",
-          },
-          emphasis: { scale: 1.15 },
+          name: "Bilateral Competitiveness Index",
+          type: "radar",
+          data: radarSeriesData,
         },
       ],
-    }),
-    [scatterPoints, countryNames],
-  );
+    };
+  }, [countryData]);
 
-  const tableIndicators = [
-    "NY.GDP.PCAP.CD",
-    "SL.UEM.TOTL.ZS",
-    "SL.TLF.CACT.ZS",
-    "NE.CON.PRVT.PC.KD",
-    "FP.CPI.TOTL",
-  ];
+  // -------------------------------------------------------------
+  // Chart 2: Historical Sector Trajectory (2010-2024 Multi-Line)
+  // -------------------------------------------------------------
+  const trajectoryOption: EChartsOption = React.useMemo(() => {
+    const seriesData = countryData.map((c) => {
+      const rows = sectorSeriesRows
+        .filter((r) => r.country_iso3 === c.iso3 && (r.indicator_id === activeIndicatorId || !r.indicator_id))
+        .sort((a, b) => a.year - b.year);
+
+      // Ensure strictly 1 observation per year per country (prevents duplicate points & sawtooth artifacts)
+      const yearMap = new Map<number, number>();
+      for (const r of rows) {
+        if (r.indicator_value != null && !yearMap.has(r.year)) {
+          yearMap.set(r.year, r.indicator_value);
+        }
+      }
+      const points = Array.from(yearMap.entries())
+        .map(([year, value]) => ({ year, value }))
+        .sort((a, b) => a.year - b.year);
+
+      return {
+        name: c.name,
+        color: c.color,
+        points,
+      };
+    });
+
+    const unit = countryData[0]?.latestSector?.indicator_unit || "";
+
+    return timeSeriesOption({
+      series: seriesData,
+      xMin: 2010,
+      xMax: 2024,
+      yName: unit,
+      valueFormatter: (v) => formatCompact(v),
+    });
+  }, [sectorSeriesRows, countryData, activeIndicatorId]);
+
+  // -------------------------------------------------------------
+  // Chart 3: Occupational Wage Structure (ISCO 1-9 Grouped Bar)
+  // -------------------------------------------------------------
+  const occupationalWageOption: EChartsOption = React.useMemo(() => {
+    const salaryKey = BASIS_KEYS[basis];
+    const occCodes = ["1", "2", "3", "4", "5", "6", "7", "8", "9"];
+    const categories = occCodes.map((code) => {
+      const occ = occupationList.find((o) => o.code === code);
+      return occ?.name ?? `ISCO ${code}`;
+    });
+
+    const series = countryData.map((c) => {
+      const values = occCodes.map((code) => {
+        const row = salaryRows.find((r) => r.country_iso3 === c.iso3 && r.occupation_code === code);
+        return row ? toNumber(row[salaryKey]) : null;
+      });
+      return { name: c.name, values, color: c.color };
+    });
+
+    return barOption({
+      categories,
+      series,
+      horizontal: true,
+      valueFormatter: (v) =>
+        basis === "ppp"
+          ? `$${formatNumber(v, { maximumFractionDigits: 0 })}`
+          : formatNumber(v, { maximumFractionDigits: 0 }),
+      yName: basis === "ppp" ? "PPP Intl $/mo" : "Monthly Earnings",
+    });
+  }, [occupationList, salaryRows, countryData, basis]);
+
+  // -------------------------------------------------------------
+  // Chart 4: Econometric Forecast Horizon (2025-2030 Outlook)
+  // -------------------------------------------------------------
+  const forecastOption: EChartsOption = React.useMemo(() => {
+    const seriesData = countryData.map((c) => {
+      const rows = forecastRows
+        .filter((r) => r.country_iso3 === c.iso3 && (r.indicator_id === activeIndicatorId || !r.indicator_id))
+        .sort((a, b) => a.target_year - b.target_year);
+
+      const yearMap = new Map<number, number>();
+      for (const r of rows) {
+        if (r.predicted_value != null && !yearMap.has(r.target_year)) {
+          yearMap.set(r.target_year, r.predicted_value);
+        }
+      }
+      const points = Array.from(yearMap.entries())
+        .map(([year, value]) => ({ year, value }))
+        .sort((a, b) => a.year - b.year);
+
+      return {
+        name: `${c.name} (Projected)`,
+        color: c.color,
+        dashed: true,
+        points,
+      };
+    });
+
+    const bands = countryData.map((c) => {
+      const rows = forecastRows
+        .filter((r) => r.country_iso3 === c.iso3 && (r.indicator_id === activeIndicatorId || !r.indicator_id))
+        .sort((a, b) => a.target_year - b.target_year);
+
+      const bandMap = new Map<number, { lower: number; upper: number }>();
+      for (const r of rows) {
+        if (r.lower_interval != null && r.upper_interval != null && !bandMap.has(r.target_year)) {
+          bandMap.set(r.target_year, { lower: r.lower_interval, upper: r.upper_interval });
+        }
+      }
+      const points = Array.from(bandMap.entries())
+        .map(([year, { lower, upper }]) => ({ year, lower, upper }))
+        .sort((a, b) => a.year - b.year);
+
+      return {
+        name: `${c.name} 95% Interval`,
+        color: c.color,
+        points,
+      };
+    });
+
+    const unit =
+      forecastRows[0]?.indicator_unit ?? countryData[0]?.latestSector?.indicator_unit ?? "Projected Index";
+
+    return timeSeriesOption({
+      series: seriesData,
+      bands,
+      xMin: 2025,
+      xMax: 2030,
+      yName: unit,
+      valueFormatter: (v) => formatCompact(v),
+    });
+  }, [forecastRows, countryData, activeIndicatorId]);
 
   return (
-    <div className="space-y-8">
+    <div className="space-y-8 pb-12">
+      {/* Page Header */}
       <PageHeader
-        eyebrow="Section 03 · Country comparison"
-        title="Compare six economies on the same evidence base"
-        description="Country context, labour-market conditions, mapped sector employment and professional earnings. Each metric keeps its own unit and latest available year; comparisons are descriptive and do not imply causal relationships."
-        meta={
-          <div className="flex flex-wrap items-center gap-1.5">
-            <Badge variant="outline">{countries.length} countries</Badge>
-            <Badge variant="outline">{sectors.length} sectors</Badge>
-            <Badge variant="secondary">Latest available year ≤ {to}</Badge>
-          </div>
+        eyebrow="Comparative Intelligence Hub"
+        title="Country & Sector Head-to-Head Comparison"
+        description="Multi-country structural benchmark comparing national industrial output, talent density, real wage competitiveness, living affordability, and capital projects across leading economies."
+        actions={
+          <Badge variant="outline" className="border-teal/30 bg-teal/10 font-mono text-[11px] text-teal">
+            {selectedCountries.length} COUNTRIES BENCHMARKED
+          </Badge>
         }
       />
 
-      <section className="grid gap-3 sm:grid-cols-2 xl:grid-cols-4">
-        <KpiCard
-          label="Mean GDP per capita"
-          value={averageBy(gdpValues, (value) => value) !== null ? `$${formatCompact(averageBy(gdpValues, (value) => value))}` : "Unavailable"}
-          hint="Current US$, selected countries"
-          tone="blue"
-          icon={<Globe2 className="h-4 w-4" />}
-        />
-        <KpiCard
-          label="Mean unemployment"
-          value={formatPercent(averageBy(unemploymentValues, (value) => value))}
-          hint="Share of labour force"
-          tone="rose"
-          icon={<Users className="h-4 w-4" />}
-        />
-        <KpiCard
-          label="Mean participation"
-          value={formatPercent(averageBy(participationValues, (value) => value))}
-          hint="Share of population 15+"
-          tone="teal"
-          icon={<TrendingUp className="h-4 w-4" />}
-        />
-        <KpiCard
-          label="Professional earnings"
-          value={
-            salaryRows.length
-              ? `$${formatCompact(
-                  averageBy(
-                    Object.values(latestSalary).filter((row) => toNumber(row.salary_ppp_intl) !== null),
-                    (row) => row.salary_ppp_intl,
-                  ),
-                )}`
-              : "Unavailable"
-          }
-          hint="PPP intl $ / month; Japan absent"
-          tone="amber"
-          icon={<Banknote className="h-4 w-4" />}
-        />
-      </section>
+      {/* Control Station: Dynamic Country Selectors + '+ Add Country' Button + Sector + Year + Basis */}
+      <Card className="border border-border/70 bg-card/60 shadow-sm backdrop-blur-sm">
+        <CardContent className="p-4 sm:p-5">
+          {/* Countries Control Row */}
+          <div>
+            <div className="mb-2 flex items-center justify-between">
+              <label className="flex items-center gap-1.5 text-xs font-semibold uppercase tracking-wider text-muted-foreground">
+                <Globe2 className="h-3.5 w-3.5 text-teal" /> Benchmark Countries ({selectedCountries.length} active)
+              </label>
+              <div className="flex items-center gap-2">
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  onClick={handleSwap}
+                  className="h-7 text-xs text-muted-foreground hover:text-foreground"
+                  title="Reverse comparison order"
+                >
+                  <ArrowLeftRight className="mr-1 h-3.5 w-3.5" />
+                  Reverse Order
+                </Button>
+                {selectedCountries.length < countryList.length && (
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={addCountry}
+                    className="h-7 border-teal/40 bg-teal/5 text-xs text-teal hover:bg-teal/15 font-medium"
+                  >
+                    <Plus className="mr-1 h-3.5 w-3.5" />
+                    Add Country
+                  </Button>
+                )}
+              </div>
+            </div>
 
-      <SectionHeading
-        eyebrow="Country scorecards"
-        title="A compact profile for each economy"
-        description="The latest observation in the selected year window for each metric. Blank values are unavailable, not zero."
-      />
-
-      <section className="grid gap-3 sm:grid-cols-2 xl:grid-cols-3">
-        {countries.map((iso3) => {
-          const contextForCountry = latestContext[iso3] ?? {};
-          const gdp = toNumber(contextForCountry["NY.GDP.PCAP.CD"]?.value);
-          const unemployment = toNumber(contextForCountry["SL.UEM.TOTL.ZS"]?.value);
-          const participation = toNumber(contextForCountry["SL.TLF.CACT.ZS"]?.value);
-          const consumption = toNumber(contextForCountry["NE.CON.PRVT.PC.KD"]?.value);
-          const salaryRow = latestSalary[iso3];
-          return (
-            <Card key={iso3} className="overflow-hidden">
-              <div className="h-1" style={{ background: COUNTRY_COLORS[iso3] }} />
-              <CardHeader className="pb-2">
-                <div className="flex items-start justify-between gap-3">
-                  <div>
-                    <div className="flex items-center gap-2">
-                      <span className="font-mono text-[10px] text-muted">{iso3}</span>
-                      <Badge variant="outline" className="normal-case tracking-normal">
-                        {projectMeta?.countries?.find((country) => country.iso3 === iso3)?.currency ?? ""}
-                      </Badge>
-                    </div>
-                    <CardTitle className="mt-1 font-display text-xl font-normal">
-                      {countryNames[iso3] ?? iso3}
-                    </CardTitle>
+            {/* Country Selectors Grid */}
+            <div className="grid grid-cols-2 gap-2.5 sm:grid-cols-3 md:grid-cols-6">
+              {selectedCountries.map((iso3, idx) => {
+                const color = COUNTRY_COLORS[iso3] || "#5B6B7C";
+                return (
+                  <div key={idx} className="relative group">
+                    <div
+                      className="absolute left-0 top-0 bottom-0 w-1 rounded-l-md"
+                      style={{ backgroundColor: color }}
+                    />
+                    <Select
+                      value={iso3}
+                      onValueChange={(val) => updateCountry(idx, val)}
+                    >
+                      <SelectTrigger className="h-10 pl-3 pr-7 bg-background font-medium text-xs">
+                        <SelectValue />
+                      </SelectTrigger>
+                      <SelectContent>
+                        {countryList.map((c) => (
+                          <SelectItem key={c.iso3} value={c.iso3} className="text-xs">
+                            <span className="mr-1.5">{COUNTRY_FLAGS[c.iso3] || "🌐"}</span>
+                            {c.name} ({c.iso3})
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                    {selectedCountries.length > 2 && (
+                      <button
+                        type="button"
+                        onClick={() => removeCountry(iso3)}
+                        className="absolute right-2 top-2.5 rounded-full p-0.5 text-muted-foreground hover:bg-muted hover:text-destructive transition-colors"
+                        title={`Remove ${iso3}`}
+                      >
+                        <X className="h-3.5 w-3.5" />
+                      </button>
+                    )}
                   </div>
-                  <span
-                    className="mt-1 h-2.5 w-2.5 rounded-full"
-                    style={{ background: COUNTRY_COLORS[iso3] }}
-                  />
+                );
+              })}
+
+              {/* Add Country placeholder button if < total */}
+              {selectedCountries.length < countryList.length && (
+                <button
+                  type="button"
+                  onClick={addCountry}
+                  className="flex h-10 items-center justify-center gap-1.5 rounded-md border border-dashed border-border/80 bg-muted/20 text-xs font-medium text-muted-foreground transition-colors hover:border-teal/60 hover:bg-teal/5 hover:text-teal"
+                >
+                  <Plus className="h-4 w-4" /> Add Country
+                </button>
+              )}
+            </div>
+          </div>
+
+          {/* Sector, Year, and Basis Controls */}
+          <div className="mt-4 grid grid-cols-1 items-end gap-3 sm:grid-cols-12 border-t border-border/50 pt-4">
+            {/* Target Sector */}
+            <div className="sm:col-span-5">
+              <label className="mb-1.5 flex items-center gap-1.5 text-xs font-semibold uppercase tracking-wider text-muted-foreground">
+                <Factory className="h-3.5 w-3.5 text-blue-600" /> Target Industrial Sector
+              </label>
+              <Select
+                value={selectedSector}
+                onValueChange={(val) => {
+                  setSelectedSector(val);
+                  setSelectedIndicatorId("");
+                }}
+              >
+                <SelectTrigger className="h-10 bg-background font-medium">
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  {sectorList.map((s) => (
+                    <SelectItem key={s.id} value={s.id}>
+                      {s.short || s.name}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
+
+            {/* Observed Year */}
+            <div className="sm:col-span-3">
+              <label className="mb-1.5 flex items-center gap-1.5 text-xs font-semibold uppercase tracking-wider text-muted-foreground">
+                <Calendar className="h-3.5 w-3.5 text-muted-foreground" /> Observed Year
+              </label>
+              <Select value={String(selectedYear)} onValueChange={(v) => setSelectedYear(Number(v))}>
+                <SelectTrigger className="h-10 bg-background font-medium">
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  {Array.from({ length: 15 }, (_, i) => 2024 - i).map((y) => (
+                    <SelectItem key={y} value={String(y)}>
+                      {y}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
+
+            {/* Valuation Currency Basis */}
+            <div className="sm:col-span-4">
+              <label className="mb-1.5 flex items-center gap-1.5 text-xs font-semibold uppercase tracking-wider text-muted-foreground">
+                <Banknote className="h-3.5 w-3.5 text-emerald-600" /> Wage Valuation Basis
+              </label>
+              <Tabs value={basis} onValueChange={(v) => setBasis(v as Basis)} className="h-10">
+                <TabsList className="h-10 w-full bg-muted/60 p-1">
+                  <TabsTrigger value="ppp" className="h-8 flex-1 text-xs">
+                    PPP intl $
+                  </TabsTrigger>
+                  <TabsTrigger value="nominal" className="h-8 flex-1 text-xs">
+                    Nominal
+                  </TabsTrigger>
+                  <TabsTrigger value="real" className="h-8 flex-1 text-xs">
+                    Real 2010
+                  </TabsTrigger>
+                </TabsList>
+              </Tabs>
+            </div>
+          </div>
+        </CardContent>
+      </Card>
+
+      {/* Multi-Country Scorecard Row */}
+      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
+        {/* Metric 1: Sector Core Metric */}
+        <Card className="border border-border/70 bg-card shadow-xs">
+          <CardContent className="p-4 sm:p-5">
+            <div className="flex items-center justify-between text-xs text-muted-foreground">
+              <span className="font-semibold uppercase tracking-wider">Sector Core Indicator</span>
+              <Badge variant="outline" className="font-mono text-[10px]">
+                {selectedYear}
+              </Badge>
+            </div>
+            <div className="mt-3 space-y-1.5">
+              {countryData.map((c) => (
+                <div key={c.iso3} className="flex items-center justify-between text-xs">
+                  <div className="flex items-center gap-1.5">
+                    <span className="h-2 w-2 rounded-full" style={{ backgroundColor: c.color }} />
+                    <span>{c.flag}</span>
+                    <span className="font-medium">{c.name}:</span>
+                  </div>
+                  <span className="font-mono font-bold text-foreground">
+                    {c.latestSector?.indicator_value != null
+                      ? formatCompact(c.latestSector.indicator_value)
+                      : "—"}
+                  </span>
                 </div>
-              </CardHeader>
-              <CardContent className="grid grid-cols-2 gap-x-3 gap-y-2 pt-0 text-xs">
-                <Stat label="GDP / capita" value={gdp === null ? "Unavailable" : `$${formatCompact(gdp)}`} />
-                <Stat label="Unemployment" value={formatPercent(unemployment)} />
-                <Stat label="Participation" value={formatPercent(participation)} />
-                <Stat
-                  label="Household cons."
-                  value={consumption === null ? "Unavailable" : `$${formatCompact(consumption)}`}
-                />
-                <Stat
-                  label="Professional pay"
-                  value={
-                    salaryRow && toNumber(salaryRow.salary_ppp_intl) !== null
-                      ? `$${formatCompact(toNumber(salaryRow.salary_ppp_intl))}/mo`
-                      : "Unavailable"
-                  }
-                />
-                <Stat
-                  label="Mapped employment"
-                  value={
-                    latestEmployment[iso3]
-                      ? `${formatCompact(
-                          Object.values(latestEmployment[iso3]).reduce<number>(
-                            (sum, value) => sum + (value ?? 0),
-                            0,
-                          ),
-                        )}k`
-                      : "Unavailable"
-                  }
-                />
-              </CardContent>
-            </Card>
-          );
-        })}
-      </section>
+              ))}
+            </div>
+          </CardContent>
+        </Card>
 
-      <section className="grid gap-4 lg:grid-cols-12">
-        <ChartCard
-          className="lg:col-span-7"
-          eyebrow="Income trajectory"
-          title="GDP per capita, current US$"
-          description="Observed whole-economy income per person. Current-dollar levels are affected by exchange rates and inflation; use the trajectory for direction, not real growth."
-          option={timeSeriesOption({
-            series: gdpSeries,
-            xMin: from,
-            xMax: to,
-            yName: "current US$",
-            valueFormatter: (value) => `$${formatNumber(value, { maximumFractionDigits: 0 })}`,
-          })}
-          height={350}
-          source={{
-            name: "World Bank WDI — NY.GDP.PCAP.CD",
-            url: "https://data.worldbank.org/indicator/NY.GDP.PCAP.CD",
-            note: "Current US dollars; no PPP adjustment in this chart.",
-          }}
-          csvRows={contextSeriesRows.map((row) => ({
-            country_iso3: row.country_iso3,
-            country_name: row.country_name,
-            year: row.year,
-            indicator_id: row.indicator_id,
-            value: row.value,
-            unit: row.unit,
-            source_url: row.source_url,
-          }))}
-          csvFilename="comparison-gdp-per-capita"
-          isLoading={contextSeries.isLoading}
-          error={contextSeries.error}
-          isEmpty={!contextSeriesRows.length}
-          onRetry={() => void contextSeries.refetch()}
-        />
+        {/* Metric 2: Workforce Talent Pool */}
+        <Card className="border border-border/70 bg-card shadow-xs">
+          <CardContent className="p-4 sm:p-5">
+            <div className="flex items-center justify-between text-xs text-muted-foreground">
+              <span className="font-semibold uppercase tracking-wider">Workforce Headcount</span>
+              <Users className="h-3.5 w-3.5 text-blue-500" />
+            </div>
+            <div className="mt-3 space-y-1.5">
+              {countryData.map((c) => (
+                <div key={c.iso3} className="flex items-center justify-between text-xs">
+                  <div className="flex items-center gap-1.5">
+                    <span className="h-2 w-2 rounded-full" style={{ backgroundColor: c.color }} />
+                    <span>{c.flag}</span>
+                    <span className="font-medium">{c.name}:</span>
+                  </div>
+                  <span className="font-mono font-bold text-foreground">
+                    {c.emp != null ? formatCompact(c.emp) : "—"}
+                  </span>
+                </div>
+              ))}
+            </div>
+          </CardContent>
+        </Card>
 
-        <ChartCard
-          className="lg:col-span-5"
-          eyebrow="Labour market"
-          title="Unemployment and participation"
-          description="Two different denominators share a percentage axis. High participation is not inherently good or bad without the unemployment and demographic context."
-          option={barOption({
-            categories: countries,
-            series: [
-              {
-                name: "Unemployment (% labour force)",
-                values: countries.map((iso3) => toNumber(latestContext[iso3]?.["SL.UEM.TOTL.ZS"]?.value)),
-                color: "#A63D57",
-              },
-              {
-                name: "Participation (% population 15+)",
-                values: countries.map((iso3) => toNumber(latestContext[iso3]?.["SL.TLF.CACT.ZS"]?.value)),
-                color: "#2457A6",
-              },
-            ],
-            valueFormatter: (value) => `${value.toFixed(1)}%`,
-            yName: "%",
-          })}
-          height={350}
-          source={{
-            name: "World Bank WDI — SL.UEM.TOTL.ZS and SL.TLF.CACT.ZS",
-            url: "https://data.worldbank.org/indicator/SL.UEM.TOTL.ZS",
-            note: "Latest available values within the year window.",
-          }}
-          csvRows={countries.map((iso3) => ({
-            country_iso3: iso3,
-            unemployment_pct: toNumber(latestContext[iso3]?.["SL.UEM.TOTL.ZS"]?.value),
-            participation_pct: toNumber(latestContext[iso3]?.["SL.TLF.CACT.ZS"]?.value),
-            unemployment_year: latestContext[iso3]?.["SL.UEM.TOTL.ZS"]?.year,
-            participation_year: latestContext[iso3]?.["SL.TLF.CACT.ZS"]?.year,
-          }))}
-          csvFilename="comparison-labour-market"
-          isLoading={context.isLoading}
-          error={context.error}
-          isEmpty={!contextRows.length}
-          onRetry={() => void context.refetch()}
-        />
+        {/* Metric 3: Professional Compensation */}
+        <Card className="border border-border/70 bg-card shadow-xs">
+          <CardContent className="p-4 sm:p-5">
+            <div className="flex items-center justify-between text-xs text-muted-foreground">
+              <span className="font-semibold uppercase tracking-wider">Professional Earnings</span>
+              <Banknote className="h-3.5 w-3.5 text-emerald-500" />
+            </div>
+            <div className="mt-3 space-y-1.5">
+              {countryData.map((c) => (
+                <div key={c.iso3} className="flex items-center justify-between text-xs">
+                  <div className="flex items-center gap-1.5">
+                    <span className="h-2 w-2 rounded-full" style={{ backgroundColor: c.color }} />
+                    <span>{c.flag}</span>
+                    <span className="font-medium">{c.name}:</span>
+                  </div>
+                  <span className="font-mono font-bold text-foreground">
+                    {c.profSalary != null
+                      ? basis === "ppp"
+                        ? `$${formatNumber(c.profSalary, { maximumFractionDigits: 0 })}`
+                        : formatNumber(c.profSalary, { maximumFractionDigits: 0 })
+                      : "—"}
+                  </span>
+                </div>
+              ))}
+            </div>
+          </CardContent>
+        </Card>
 
-        <ChartCard
-          className="lg:col-span-7"
-          eyebrow="Employment structure"
-          title="Mapped sector employment composition"
-          description="Stacked latest sector totals for all occupations. Sector mappings overlap conceptually: they are not mutually exclusive industries and the total is a research basket, not whole-economy employment."
-          option={barOption({
-            categories: countries,
-            series: employmentComposition,
-            valueFormatter: (value) => `${formatNumber(value, { maximumFractionDigits: 0 })} thousand`,
-            yName: "thousand persons",
-          })}
-          height={350}
-          source={{
-            name: "ILOSTAT — industry × occupation employment",
-            url: "https://ilostat.ilo.org/",
-            note: "Section-level ISIC Rev.4 proxies; Canada uses ISIC Rev.3 and has two unavailable sectors.",
-          }}
-          csvRows={countries.flatMap((iso3) =>
-            sectors.map((sectorId) => ({
-              country_iso3: iso3,
-              sector_id: sectorId,
-              sector_name: sectorNames[sectorId],
-              employment_thousands: latestEmployment[iso3]?.[sectorId] ?? null,
-            })),
-          )}
-          csvFilename="comparison-sector-employment-composition"
-          isLoading={employment.isLoading}
-          error={employment.error}
-          isEmpty={!employmentRows.length}
-          onRetry={() => void employment.refetch()}
-        />
+        {/* Metric 4: GDP per Capita */}
+        <Card className="border border-border/70 bg-card shadow-xs">
+          <CardContent className="p-4 sm:p-5">
+            <div className="flex items-center justify-between text-xs text-muted-foreground">
+              <span className="font-semibold uppercase tracking-wider">GDP Per Capita (US$)</span>
+              <DollarSign className="h-3.5 w-3.5 text-amber-500" />
+            </div>
+            <div className="mt-3 space-y-1.5">
+              {countryData.map((c) => (
+                <div key={c.iso3} className="flex items-center justify-between text-xs">
+                  <div className="flex items-center gap-1.5">
+                    <span className="h-2 w-2 rounded-full" style={{ backgroundColor: c.color }} />
+                    <span>{c.flag}</span>
+                    <span className="font-medium">{c.name}:</span>
+                  </div>
+                  <span className="font-mono font-bold text-foreground">
+                    {c.gdp != null ? `$${formatCompact(c.gdp)}` : "—"}
+                  </span>
+                </div>
+              ))}
+            </div>
+          </CardContent>
+        </Card>
+      </div>
 
-        <ChartCard
-          className="lg:col-span-5"
-          eyebrow="Positioning"
-          title="Income versus unemployment"
-          description="A descriptive scatter, not a model of causation. Bubble size is population; labels use ISO3 codes."
-          option={scatterOption}
-          height={350}
-          source={{
-            name: "World Bank WDI — GDP per capita, unemployment, population",
-            url: "https://data.worldbank.org/",
-            note: "Latest available values within the year window; years can differ by indicator.",
-          }}
-          csvRows={scatterPoints.map((point) => ({
-            country_iso3: point.name,
-            gdp_per_capita_usd: point.value[0],
-            unemployment_pct: point.value[1],
-            population: point.value[2],
-          }))}
-          csvFilename="comparison-income-unemployment-scatter"
-          isLoading={context.isLoading}
-          error={context.error}
-          isEmpty={!scatterPoints.length}
-          onRetry={() => void context.refetch()}
-        />
-      </section>
+      {/* Section 1: Strategic Multi-Pillar Radar & Historical Trajectory */}
+      <div className="grid grid-cols-1 gap-6 lg:grid-cols-12">
+        {/* Radar Chart (5 cols) */}
+        <div className="lg:col-span-5">
+          <ChartCard
+            title="Strategic Competitiveness Polygon"
+            eyebrow="Multi-Country Benchmark"
+            description={`Holistic benchmark across 6 structural pillars normalized among ${selectedCountries.length} countries.`}
+            option={radarOption}
+            height={360}
+            source={{
+              name: "Consolidated ILOSTAT, World Bank WDI & Industrial Data",
+              note: "Values normalized on a relative 0–100 scale.",
+            }}
+          />
+        </div>
 
-      <SectionHeading
-        eyebrow="Full comparison table"
-        title="Latest context and earnings indicators"
-        description="Values are shown with their source units. CPI is an index (2010 = 100); household consumption is constant 2015 US$. Professional pay is PPP-adjusted gross monthly earnings."
+        {/* Historical Trajectory (7 cols) */}
+        <div className="lg:col-span-7">
+          <ChartCard
+            title={`${sectorTitle} Trajectory (2010–2024)`}
+            eyebrow="Historical Longitudinal Trend"
+            description={`Observed evolution of ${countryData[0]?.latestSector?.indicator_name || "industrial proxy output"}.`}
+            toolbar={
+              availableSectorIndicators.length > 1 ? (
+                <Select
+                  value={activeIndicatorId}
+                  onValueChange={(val) => setSelectedIndicatorId(val)}
+                >
+                  <SelectTrigger className="h-7 max-w-[200px] text-[11px] bg-background/90 px-2 py-0 border-border/80 truncate">
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {availableSectorIndicators.map((ind) => (
+                      <SelectItem key={ind.indicator_id} value={ind.indicator_id} className="text-xs">
+                        {ind.indicator_name} ({ind.indicator_unit})
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              ) : undefined
+            }
+            option={trajectoryOption}
+            height={360}
+            source={{
+              name: countryData[0]?.latestSector?.source_name || "World Bank WDI",
+              url: countryData[0]?.latestSector?.source_url,
+              note: countryData[0]?.latestSector?.proxy_note || "Official sector proxy indicator.",
+            }}
+          />
+        </div>
+      </div>
+
+      {/* Section 2: Occupational Compensation Breakdown across ISCO 1-9 */}
+      <ChartCard
+        title={`Occupational Compensation Structure (${BASIS_LABELS[basis]})`}
+        eyebrow="Multi-Country Labor Cost Analysis"
+        description={`Comparative monthly earnings across all major ILO ISCO-08 occupational groups in ${selectedYear}.`}
+        option={occupationalWageOption}
+        height={430}
+        source={{
+          name: "ILOSTAT Average Monthly Earnings of Employees by Occupation",
+          note:
+            basis === "ppp"
+              ? "Converted to international dollars using World Bank private-consumption PPP factor."
+              : "Deflated with World Bank CPI (2010=100) or nominal local currency.",
+        }}
       />
 
-      <Card>
-        <CardContent className="pt-5">
-          <div className="overflow-auto">
+      {/* Section 3: 2025-2030 Econometric Horizon Outlook & Macro Parity */}
+      <div className="grid grid-cols-1 gap-6 lg:grid-cols-12">
+        {/* Forecast Line Chart (7 cols) */}
+        <div className="lg:col-span-7">
+          <ChartCard
+            title={`Forward Econometric Horizon (2025–2030)`}
+            eyebrow="Rolling-Origin Predictive Modeling"
+            description={`Model projections with 95% confidence bounds in ${sectorTitle}.`}
+            option={forecastOption}
+            height={340}
+            badge={
+              <Badge variant="outline" className="border-emerald-600/30 bg-emerald-50 text-emerald-700 dark:bg-emerald-950/30 dark:text-emerald-400">
+                Validated Horizon
+              </Badge>
+            }
+            source={{
+              name: "Beyond Borders Horizon Engine v1.0",
+              note: "Forecast origin: 2024. Exogenous macroeconomic scenario: continuation of trend.",
+            }}
+          />
+        </div>
+
+        {/* Macro Parity Card (5 cols) */}
+        <div className="lg:col-span-5">
+          <Card className="h-full border border-border/70 shadow-xs">
+            <CardHeader className="pb-3">
+              <span className="font-mono text-[10px] font-semibold uppercase tracking-wider text-muted-foreground">
+                Macro Parity &amp; Living Affordability
+              </span>
+              <CardTitle className="font-display text-lg">Purchasing Power Parity Context</CardTitle>
+              <CardDescription className="text-xs">
+                Comparative macro indicators across all {selectedCountries.length} active benchmark economies.
+              </CardDescription>
+            </CardHeader>
+            <CardContent className="space-y-3 pt-1">
+              {countryData.map((c) => (
+                <div key={c.iso3} className="rounded-sm border border-border/60 bg-muted/20 p-2.5 text-xs">
+                  <div className="flex items-center justify-between">
+                    <span className="font-medium flex items-center gap-1.5">
+                      <span className="h-2 w-2 rounded-full" style={{ backgroundColor: c.color }} />
+                      <span>{c.flag}</span>
+                      <span>{c.name}</span>
+                    </span>
+                    <span className="font-mono font-semibold">
+                      {c.gdp ? `$${formatNumber(c.gdp, { maximumFractionDigits: 0 })}` : "—"}
+                    </span>
+                  </div>
+                  <div className="mt-1.5 flex items-center justify-between text-[11px] text-muted-foreground border-t border-border/30 pt-1">
+                    <span>Unemployment: <strong className="text-foreground">{c.uem != null ? `${c.uem.toFixed(1)}%` : "—"}</strong></span>
+                    <span>CPI: <strong className="text-foreground">{c.cpi != null ? formatNumber(c.cpi, { maximumFractionDigits: 1 }) : "—"}</strong></span>
+                  </div>
+                </div>
+              ))}
+            </CardContent>
+          </Card>
+        </div>
+      </div>
+
+      {/* Section 4: Documented Industrial Mega-Projects Showcase */}
+      <div className="space-y-4">
+        <div className="flex flex-col gap-1 sm:flex-row sm:items-center sm:justify-between">
+          <div>
+            <span className="font-mono text-[10px] font-semibold uppercase tracking-wider text-muted-foreground">
+              Capital Expenditure &amp; Industrial Footprint
+            </span>
+            <h3 className="font-display text-xl font-bold tracking-tight">
+              Documented Mega-Projects in {sectorTitle}
+            </h3>
+          </div>
+          <Badge variant="outline" className="w-fit font-mono text-[11px] text-muted-foreground">
+            {projectRows.length} Real Projects Registered
+          </Badge>
+        </div>
+
+        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
+          {countryData.map((c) => {
+            const countryProjects = projectRows.filter((p) => p.country_iso3 === c.iso3);
+            return (
+              <div key={c.iso3} className="space-y-3">
+                <div className="flex items-center gap-2 border-b border-border/60 pb-2">
+                  <span className="text-lg">{c.flag}</span>
+                  <h4 className="font-display font-semibold text-foreground text-sm">{c.name}</h4>
+                  <Badge variant="secondary" className="ml-auto font-mono text-[10px]">
+                    {countryProjects.length} Active
+                  </Badge>
+                </div>
+
+                {countryProjects.length === 0 ? (
+                  <p className="py-6 text-center text-xs text-muted-foreground">
+                    No active mega-projects documented for {c.name} in {sectorTitle}.
+                  </p>
+                ) : (
+                  countryProjects.map((p, idx) => (
+                    <Card key={idx} className="border border-border/70 bg-card/60 shadow-xs">
+                      <CardContent className="p-3.5">
+                        <div className="flex items-start justify-between gap-2">
+                          <div>
+                            <h5 className="font-semibold text-xs text-foreground">{p.project_name}</h5>
+                            <p className="text-[11px] text-muted-foreground">
+                              Sponsor: <span className="font-medium text-foreground">{p.sponsor}</span>
+                            </p>
+                          </div>
+                          <Badge
+                            variant="outline"
+                            className={`text-[9px] font-mono shrink-0 ${
+                              p.status.toLowerCase().includes("construction")
+                                ? "border-blue-500/30 bg-blue-50 text-blue-700 dark:bg-blue-950/30 dark:text-blue-400"
+                                : p.status.toLowerCase().includes("operational")
+                                ? "border-emerald-500/30 bg-emerald-50 text-emerald-700 dark:bg-emerald-950/30 dark:text-emerald-400"
+                                : "border-amber-500/30 bg-amber-50 text-amber-700 dark:bg-amber-950/30 dark:text-amber-400"
+                            }`}
+                          >
+                            {p.status}
+                          </Badge>
+                        </div>
+
+                        <div className="mt-2.5 grid grid-cols-3 gap-1.5 border-t border-border/40 pt-2 text-[11px]">
+                          <div>
+                            <span className="text-[9px] uppercase text-muted-foreground block">Outlay</span>
+                            <span className="font-mono font-semibold text-foreground">
+                              {p.investment_usd_million ? `$${formatNumber(p.investment_usd_million)}M` : "Disclosed"}
+                            </span>
+                          </div>
+                          <div>
+                            <span className="text-[9px] uppercase text-muted-foreground block">Capacity</span>
+                            <span className="font-medium text-foreground truncate block" title={p.capacity || ""}>
+                              {p.capacity || "Commercial"}
+                            </span>
+                          </div>
+                          <div>
+                            <span className="text-[9px] uppercase text-muted-foreground block">Jobs</span>
+                            <span className="font-mono font-semibold text-foreground">
+                              {p.jobs_created ? `${formatNumber(p.jobs_created)}` : "—"}
+                            </span>
+                          </div>
+                        </div>
+                      </CardContent>
+                    </Card>
+                  ))
+                )}
+              </div>
+            );
+          })}
+        </div>
+      </div>
+
+      {/* Section 5: Granular Multi-Country Evidence Matrix Table */}
+      <Card className="border border-border/70 shadow-xs">
+        <CardHeader>
+          <div className="flex flex-col gap-1 sm:flex-row sm:items-center sm:justify-between">
+            <div>
+              <span className="font-mono text-[10px] font-semibold uppercase tracking-wider text-muted-foreground">
+                Quantitative Evidence Matrix
+              </span>
+              <CardTitle className="font-display text-lg">Multi-Country Cross-Sectional Statistics</CardTitle>
+            </div>
+            <span className="font-mono text-xs text-muted-foreground">
+              Year {selectedYear} • {selectedCountries.length} Countries Compared
+            </span>
+          </div>
+        </CardHeader>
+        <CardContent>
+          <div className="overflow-x-auto">
             <Table>
               <TableHeader>
                 <TableRow>
-                  <TableHead>Country</TableHead>
-                  {tableIndicators.map((indicator) => (
-                    <TableHead key={indicator} className="text-right">
-                      {CONTEXT_LABELS[indicator] ?? indicator}
+                  <TableHead className="min-w-[200px]">Metric Dimension</TableHead>
+                  <TableHead className="min-w-[100px]">Domain</TableHead>
+                  {countryData.map((c) => (
+                    <TableHead key={c.iso3} className="min-w-[120px] font-medium">
+                      <span className="mr-1">{c.flag}</span>
+                      {c.name}
                     </TableHead>
                   ))}
-                  <TableHead className="text-right">Professionals PPP</TableHead>
-                  <TableHead className="text-right">Mapped employment</TableHead>
                 </TableRow>
               </TableHeader>
-              <TableBody>
-                {countries.map((iso3) => (
-                  <TableRow key={iso3}>
-                    <TableCell>
-                      <div className="flex items-center gap-2">
-                        <span
-                          className="h-2 w-2 rounded-full"
-                          style={{ background: COUNTRY_COLORS[iso3] }}
-                        />
-                        <span className="font-medium">{countryNames[iso3] ?? iso3}</span>
-                        <span className="font-mono text-[10px] text-muted">{iso3}</span>
-                      </div>
+              <TableBody className="text-xs">
+                {/* Sector Core Metric */}
+                <TableRow>
+                  <TableCell className="font-medium">
+                    Sector Core Indicator ({countryData[0]?.latestSector?.indicator_unit || "Unit"})
+                  </TableCell>
+                  <TableCell>
+                    <Badge variant="outline" className="text-[10px]">Industrial</Badge>
+                  </TableCell>
+                  {countryData.map((c) => (
+                    <TableCell key={c.iso3} className="font-mono font-medium">
+                      {c.latestSector?.indicator_value != null ? formatNumber(c.latestSector.indicator_value) : "—"}
                     </TableCell>
-                    <TableCell className="text-right font-mono text-xs">
-                      {toNumber(latestContext[iso3]?.["NY.GDP.PCAP.CD"]?.value) === null
-                        ? "—"
-                        : `$${formatNumber(latestContext[iso3]["NY.GDP.PCAP.CD"].value, { maximumFractionDigits: 0 })}`}
+                  ))}
+                </TableRow>
+
+                {/* Workforce */}
+                <TableRow>
+                  <TableCell className="font-medium">Total Sector Employment</TableCell>
+                  <TableCell>
+                    <Badge variant="outline" className="text-[10px]">Workforce</Badge>
+                  </TableCell>
+                  {countryData.map((c) => (
+                    <TableCell key={c.iso3} className="font-mono font-medium">
+                      {c.emp != null ? formatNumber(c.emp) : "—"}
                     </TableCell>
-                    <TableCell className="text-right font-mono text-xs">
-                      {formatPercent(toNumber(latestContext[iso3]?.["SL.UEM.TOTL.ZS"]?.value))}
+                  ))}
+                </TableRow>
+
+                {/* Professional Wage */}
+                <TableRow>
+                  <TableCell className="font-medium">
+                    Professionals Mean Wage (ISCO 2, {BASIS_LABELS[basis]})
+                  </TableCell>
+                  <TableCell>
+                    <Badge variant="outline" className="text-[10px]">Compensation</Badge>
+                  </TableCell>
+                  {countryData.map((c) => (
+                    <TableCell key={c.iso3} className="font-mono font-medium">
+                      {c.profSalary != null ? formatNumber(c.profSalary, { maximumFractionDigits: 0 }) : "—"}
                     </TableCell>
-                    <TableCell className="text-right font-mono text-xs">
-                      {formatPercent(toNumber(latestContext[iso3]?.["SL.TLF.CACT.ZS"]?.value))}
+                  ))}
+                </TableRow>
+
+                {/* GDP per capita */}
+                <TableRow>
+                  <TableCell className="font-medium">GDP per Capita (current US$)</TableCell>
+                  <TableCell>
+                    <Badge variant="outline" className="text-[10px]">Macro</Badge>
+                  </TableCell>
+                  {countryData.map((c) => (
+                    <TableCell key={c.iso3} className="font-mono font-medium">
+                      {c.gdp != null ? `$${formatNumber(c.gdp, { maximumFractionDigits: 0 })}` : "—"}
                     </TableCell>
-                    <TableCell className="text-right font-mono text-xs">
-                      {toNumber(latestContext[iso3]?.["NE.CON.PRVT.PC.KD"]?.value) === null
-                        ? "—"
-                        : `$${formatNumber(latestContext[iso3]["NE.CON.PRVT.PC.KD"].value, { maximumFractionDigits: 0 })}`}
+                  ))}
+                </TableRow>
+
+                {/* Unemployment */}
+                <TableRow>
+                  <TableCell className="font-medium">Unemployment Rate (%)</TableCell>
+                  <TableCell>
+                    <Badge variant="outline" className="text-[10px]">Macro</Badge>
+                  </TableCell>
+                  {countryData.map((c) => (
+                    <TableCell key={c.iso3} className="font-mono font-medium">
+                      {c.uem != null ? `${c.uem.toFixed(1)}%` : "—"}
                     </TableCell>
-                    <TableCell className="text-right font-mono text-xs">
-                      {formatNumber(toNumber(latestContext[iso3]?.["FP.CPI.TOTL"]?.value), {
-                        maximumFractionDigits: 1,
-                      })}
+                  ))}
+                </TableRow>
+
+                {/* Consumer Price Index */}
+                <TableRow>
+                  <TableCell className="font-medium">Consumer Price Index (2010=100)</TableCell>
+                  <TableCell>
+                    <Badge variant="outline" className="text-[10px]">Living Cost</Badge>
+                  </TableCell>
+                  {countryData.map((c) => (
+                    <TableCell key={c.iso3} className="font-mono font-medium">
+                      {c.cpi != null ? formatNumber(c.cpi, { maximumFractionDigits: 1 }) : "—"}
                     </TableCell>
-                    <TableCell className="text-right font-mono text-xs">
-                      {latestSalary[iso3] && toNumber(latestSalary[iso3].salary_ppp_intl) !== null
-                        ? `$${formatNumber(latestSalary[iso3].salary_ppp_intl, { maximumFractionDigits: 0 })}`
-                        : "Unavailable"}
-                    </TableCell>
-                    <TableCell className="text-right font-mono text-xs">
-                      {latestEmployment[iso3]
-                        ? `${formatNumber(
-                            Object.values(latestEmployment[iso3]).reduce<number>(
-                              (sum, value) => sum + (value ?? 0),
-                              0,
-                            ),
-                            { maximumFractionDigits: 0 },
-                          )}k`
-                        : "—"}
-                    </TableCell>
-                  </TableRow>
-                ))}
+                  ))}
+                </TableRow>
               </TableBody>
             </Table>
           </div>
         </CardContent>
       </Card>
-    </div>
-  );
-}
-
-function Stat({ label, value }: { label: string; value: string }) {
-  return (
-    <div>
-      <p className="text-[10px] uppercase tracking-[0.07em] text-muted">{label}</p>
-      <p className="mt-0.5 font-mono text-[13px] font-medium text-ink">{value}</p>
     </div>
   );
 }

@@ -349,7 +349,7 @@ export default function EmploymentPage() {
           option={timeSeriesOption({
             series: trendSeries,
             xMin: from,
-            xMax: to,
+            xMax: Math.max(from + 1, to),
             yName: "thousand persons",
             valueFormatter: (value) => `${formatNumber(value, { maximumFractionDigits: 0 })} thousand`,
           })}

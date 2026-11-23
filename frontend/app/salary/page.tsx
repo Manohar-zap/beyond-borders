@@ -291,7 +291,7 @@ export default function SalaryPage() {
           option={timeSeriesOption({
             series,
             xMin: from,
-            xMax: to,
+            xMax: Math.max(from + 1, to),
             yName: unit,
             valueFormatter: (value) =>
               basis === "ppp"

@@ -1,10 +1,19 @@
 export const FALLBACK_COUNTRIES = [
-  { iso3: "IND", name: "India", currency: "INR", region: "South Asia" },
-  { iso3: "DEU", name: "Germany", currency: "EUR", region: "Europe" },
-  { iso3: "CAN", name: "Canada", currency: "CAD", region: "North America" },
   { iso3: "USA", name: "United States", currency: "USD", region: "North America" },
-  { iso3: "GBR", name: "United Kingdom", currency: "GBP", region: "Europe" },
+  { iso3: "CHN", name: "China", currency: "CNY", region: "East Asia" },
+  { iso3: "DEU", name: "Germany", currency: "EUR", region: "Europe" },
   { iso3: "JPN", name: "Japan", currency: "JPY", region: "East Asia" },
+  { iso3: "IND", name: "India", currency: "INR", region: "South Asia" },
+  { iso3: "GBR", name: "United Kingdom", currency: "GBP", region: "Europe" },
+  { iso3: "FRA", name: "France", currency: "EUR", region: "Europe" },
+  { iso3: "ITA", name: "Italy", currency: "EUR", region: "Europe" },
+  { iso3: "CAN", name: "Canada", currency: "CAD", region: "North America" },
+  { iso3: "BRA", name: "Brazil", currency: "BRL", region: "Latin America" },
+  { iso3: "KOR", name: "South Korea", currency: "KRW", region: "East Asia" },
+  { iso3: "MEX", name: "Mexico", currency: "MXN", region: "Latin America" },
+  { iso3: "AUS", name: "Australia", currency: "AUD", region: "Oceania" },
+  { iso3: "ESP", name: "Spain", currency: "EUR", region: "Europe" },
+  { iso3: "IDN", name: "Indonesia", currency: "IDR", region: "Southeast Asia" },
 ];
 
 export const FALLBACK_SECTORS = [
@@ -61,10 +70,7 @@ export const DEFAULT_TO = 2024;
 export const NAV_ITEMS = [
   { href: "/", label: "Research Overview", short: "Overview", icon: "LayoutDashboard" },
   { href: "/sectors", label: "Global Sector Development", short: "Sectors", icon: "Globe2" },
-  { href: "/comparison", label: "Country Comparison", short: "Comparison", icon: "BarChart3" },
-  { href: "/employment", label: "Employment Intelligence", short: "Employment", icon: "Users" },
-  { href: "/salary", label: "Salary Analysis", short: "Salary", icon: "Banknote" },
-  { href: "/living-cost", label: "Living Cost Analysis", short: "Living Cost", icon: "House" },
+  { href: "/comparison", label: "Country & Sector Comparison", short: "Comparison", icon: "BarChart3" },
   { href: "/forecast", label: "Forecast & Future Outlook", short: "Forecast", icon: "TrendingUp" },
   { href: "/methodology", label: "Data Quality & Methodology", short: "Methodology", icon: "ShieldCheck" },
 ] as const;

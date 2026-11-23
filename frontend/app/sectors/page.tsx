@@ -62,27 +62,30 @@ export default function SectorsPage() {
     active?.sector_name ??
     "Sector";
 
+  const effectiveFrom = from;
+  const effectiveTo = Math.max(from + 1, to);
+
   const seriesQuery = useApi<Envelope<CountrySectorRow>>(
-    ["sector-series", countryParam, active?.sector_id, active?.indicator_id, from, to],
+    ["sector-series", countryParam, active?.sector_id, active?.indicator_id, effectiveFrom, effectiveTo],
     "/api/sectors/series",
     {
       countries: countryParam,
       sectors: active?.sector_id,
       indicators: active?.indicator_id,
-      start: from,
-      end: to,
+      start: effectiveFrom,
+      end: effectiveTo,
     },
     { enabled: Boolean(active) },
   );
 
   const growthQuery = useApi<Envelope<SectorGrowthRow>>(
-    ["sector-growth", countryParam, sectorParam, from, to],
+    ["sector-growth", countryParam, sectorParam, effectiveFrom, effectiveTo],
     "/api/sectors/growth",
     {
       countries: countryParam,
       sectors: sectorParam,
-      start: from,
-      end: to,
+      start: effectiveFrom,
+      end: effectiveTo,
     },
   );
 
@@ -96,13 +99,22 @@ export default function SectorsPage() {
 
   const series = React.useMemo(() => {
     const groups = groupRows(rows, (row) => row.country_iso3);
-    return Object.entries(groups).map(([iso3, group]) => ({
-      name: countryNames[iso3] ?? iso3,
-      color: COUNTRY_COLORS[iso3],
-      points: group
-        .sort((a, b) => a.year - b.year)
-        .map((row) => ({ year: row.year, value: toNumber(row.indicator_value) })),
-    }));
+    return Object.entries(groups).map(([iso3, group]) => {
+      const yearMap = new Map<number, number>();
+      for (const row of group) {
+        const val = toNumber(row.indicator_value);
+        if (val != null && !yearMap.has(row.year)) {
+          yearMap.set(row.year, val);
+        }
+      }
+      return {
+        name: countryNames[iso3] ?? iso3,
+        color: COUNTRY_COLORS[iso3],
+        points: Array.from(yearMap.entries())
+          .map(([year, value]) => ({ year, value }))
+          .sort((a, b) => a.year - b.year),
+      };
+    });
   }, [rows, countryNames]);
 
   const latest = React.useMemo(

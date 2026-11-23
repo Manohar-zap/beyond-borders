@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+from dataclasses import asdict
 from typing import Any
 
 import json
@@ -16,6 +17,8 @@ SOURCE_NOTE = (
     "The indicator name and proxy flag are shown on every observation; these are not "
     "sector-specific industrial output series unless the indicator itself is sector-specific."
 )
+
+router = APIRouter(prefix="/api/sectors", tags=["sectors"])
 
 
 @router.get("/indicators")
@@ -107,6 +110,7 @@ def series(
                indicator_id, indicator_name, indicator_role, indicator_value,
                indicator_unit, industrial_output, industrial_output_unit,
                output_growth, is_proxy, proxy_note,
+               investment_announced, investment_realized, capacity_addition,
                source_name, source_url, observation_status
         FROM country_sector
         WHERE {' AND '.join(clauses)}
@@ -165,6 +169,7 @@ def latest(
         SELECT country_iso3, country_name, sector_id, sector_name, year,
                indicator_id, indicator_name, indicator_role, indicator_value,
                indicator_unit, output_growth, is_proxy, proxy_note,
+               investment_announced, investment_realized, capacity_addition,
                source_name, source_url, observation_status
         FROM ranked
         WHERE rn = 1
@@ -273,3 +278,35 @@ def coverage() -> dict[str, Any]:
         source_note="Share of expected country–sector indicator cells observed (available indicators × 2010–2024 years).",
         units=["% coverage"],
     )
+
+
+@router.get("/projects")
+def projects(
+    countries: str | None = Query(None, description="Comma-separated ISO3 codes"),
+    sectors: str | None = Query(None, description="Comma-separated sector ids"),
+) -> dict[str, Any]:
+    require_dataset("industrial_projects")
+    country_list = parse_csv(countries)
+    sector_list = parse_csv(sectors)
+    params: list[Any] = []
+    clauses = [
+        sql_in("country_iso3", country_list, params),
+        sql_in("sector_id", sector_list, params),
+    ]
+    sql = f"""
+        SELECT country_iso3, country_name, sector_id, sector_name,
+               project_name, sponsor, investment_usd_million, location,
+               status, announced_year, operational_year, capacity, jobs_created
+        FROM industrial_projects
+        WHERE {' AND '.join(clauses)}
+        ORDER BY announced_year DESC, investment_usd_million DESC
+    """
+    with get_connection() as con:
+        frame = con.execute(sql, params).df()
+    return envelope(
+        records(frame),
+        dataset="industrial_projects",
+        filters={"countries": country_list or "all", "sectors": sector_list or "all"},
+        source_note="Official government, industry consortium, and corporate announcements of major capital projects.",
+    )
+

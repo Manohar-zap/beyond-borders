@@ -12,14 +12,50 @@
   "frequency": "annual",
   "countries": [
     {
+      "iso3": "USA",
+      "name": "United States",
+      "currency": "USD",
+      "region": "North America"
+    },
+    {
+      "iso3": "CHN",
+      "name": "China",
+      "currency": "CNY",
+      "region": "East Asia"
+    },
+    {
+      "iso3": "DEU",
+      "name": "Germany",
+      "currency": "EUR",
+      "region": "Europe"
+    },
+    {
+      "iso3": "JPN",
+      "name": "Japan",
+      "currency": "JPY",
+      "region": "East Asia"
+    },
+    {
       "iso3": "IND",
       "name": "India",
       "currency": "INR",
       "region": "South Asia"
     },
     {
-      "iso3": "DEU",
-      "name": "Germany",
+      "iso3": "GBR",
+      "name": "United Kingdom",
+      "currency": "GBP",
+      "region": "Europe"
+    },
+    {
+      "iso3": "FRA",
+      "name": "France",
+      "currency": "EUR",
+      "region": "Europe"
+    },
+    {
+      "iso3": "ITA",
+      "name": "Italy",
       "currency": "EUR",
       "region": "Europe"
     },
@@ -30,22 +66,40 @@
       "region": "North America"
     },
     {
-      "iso3": "USA",
-      "name": "United States",
-      "currency": "USD",
-      "region": "North America"
+      "iso3": "BRA",
+      "name": "Brazil",
+      "currency": "BRL",
+      "region": "Latin America"
     },
     {
-      "iso3": "GBR",
-      "name": "United Kingdom",
-      "currency": "GBP",
+      "iso3": "KOR",
+      "name": "South Korea",
+      "currency": "KRW",
+      "region": "East Asia"
+    },
+    {
+      "iso3": "MEX",
+      "name": "Mexico",
+      "currency": "MXN",
+      "region": "Latin America"
+    },
+    {
+      "iso3": "AUS",
+      "name": "Australia",
+      "currency": "AUD",
+      "region": "Oceania"
+    },
+    {
+      "iso3": "ESP",
+      "name": "Spain",
+      "currency": "EUR",
       "region": "Europe"
     },
     {
-      "iso3": "JPN",
-      "name": "Japan",
-      "currency": "JPY",
-      "region": "East Asia"
+      "iso3": "IDN",
+      "name": "Indonesia",
+      "currency": "IDR",
+      "region": "Southeast Asia"
     }
   ],
   "sectors": [
@@ -198,156 +252,6 @@
     },
     "country_sector_matrix": [
       {
-        "country_iso3": "IND",
-        "country_name": "India",
-        "sector_id": "semiconductors",
-        "sector_name": "Semiconductors and Electronics",
-        "indicators": 2,
-        "observations": 30,
-        "expected": 30,
-        "coverage_pct": 100.0
-      },
-      {
-        "country_iso3": "IND",
-        "country_name": "India",
-        "sector_id": "ai_software",
-        "sector_name": "AI and Software",
-        "indicators": 2,
-        "observations": 26,
-        "expected": 30,
-        "coverage_pct": 86.7
-      },
-      {
-        "country_iso3": "IND",
-        "country_name": "India",
-        "sector_id": "renewable_energy",
-        "sector_name": "Renewable Energy",
-        "indicators": 2,
-        "observations": 24,
-        "expected": 30,
-        "coverage_pct": 80.0
-      },
-      {
-        "country_iso3": "IND",
-        "country_name": "India",
-        "sector_id": "automotive_ev",
-        "sector_name": "Automotive and Electric Vehicles",
-        "indicators": 2,
-        "observations": 30,
-        "expected": 30,
-        "coverage_pct": 100.0
-      },
-      {
-        "country_iso3": "IND",
-        "country_name": "India",
-        "sector_id": "healthcare_biotech",
-        "sector_name": "Healthcare and Biotechnology",
-        "indicators": 2,
-        "observations": 28,
-        "expected": 30,
-        "coverage_pct": 93.3
-      },
-      {
-        "country_iso3": "DEU",
-        "country_name": "Germany",
-        "sector_id": "semiconductors",
-        "sector_name": "Semiconductors and Electronics",
-        "indicators": 2,
-        "observations": 30,
-        "expected": 30,
-        "coverage_pct": 100.0
-      },
-      {
-        "country_iso3": "DEU",
-        "country_name": "Germany",
-        "sector_id": "ai_software",
-        "sector_name": "AI and Software",
-        "indicators": 2,
-        "observations": 29,
-        "expected": 30,
-        "coverage_pct": 96.7
-      },
-      {
-        "country_iso3": "DEU",
-        "country_name": "Germany",
-        "sector_id": "renewable_energy",
-        "sector_name": "Renewable Energy",
-        "indicators": 2,
-        "observations": 24,
-        "expected": 30,
-        "coverage_pct": 80.0
-      },
-      {
-        "country_iso3": "DEU",
-        "country_name": "Germany",
-        "sector_id": "automotive_ev",
-        "sector_name": "Automotive and Electric Vehicles",
-        "indicators": 2,
-        "observations": 30,
-        "expected": 30,
-        "coverage_pct": 100.0
-      },
-      {
-        "country_iso3": "DEU",
-        "country_name": "Germany",
-        "sector_id": "healthcare_biotech",
-        "sector_name": "Healthcare and Biotechnology",
-        "indicators": 2,
-        "observations": 30,
-        "expected": 30,
-        "coverage_pct": 100.0
-      },
-      {
-        "country_iso3": "CAN",
-        "country_name": "Canada",
-        "sector_id": "semiconductors",
-        "sector_name": "Semiconductors and Electronics",
-        "indicators": 2,
-        "observations": 30,
-        "expected": 30,
-        "coverage_pct": 100.0
-      },
-      {
-        "country_iso3": "CAN",
-        "country_name": "Canada",
-        "sector_id": "ai_software",
-        "sector_name": "AI and Software",
-        "indicators": 2,
-        "observations": 30,
-        "expected": 30,
-        "coverage_pct": 100.0
-      },
-      {
-        "country_iso3": "CAN",
-        "country_name": "Canada",
-        "sector_id": "renewable_energy",
-        "sector_name": "Renewable Energy",
-        "indicators": 2,
-        "observations": 24,
-        "expected": 30,
-        "coverage_pct": 80.0
-      },
-      {
-        "country_iso3": "CAN",
-        "country_name": "Canada",
-        "sector_id": "automotive_ev",
-        "sector_name": "Automotive and Electric Vehicles",
-        "indicators": 2,
-        "observations": 28,
-        "expected": 30,
-        "coverage_pct": 93.3
-      },
-      {
-        "country_iso3": "CAN",
-        "country_name": "Canada",
-        "sector_id": "healthcare_biotech",
-        "sector_name": "Healthcare and Biotechnology",
-        "indicators": 2,
-        "observations": 30,
-        "expected": 30,
-        "coverage_pct": 100.0
-      },
-      {
         "country_iso3": "USA",
         "country_name": "United States",
         "sector_id": "semiconductors",
@@ -392,10 +296,210 @@
         "country_name": "United States",
         "sector_id": "healthcare_biotech",
         "sector_name": "Healthcare and Biotechnology",
-        "indicators": 2,
-        "observations": 28,
+        "indicators": 1,
+        "observations": 14,
         "expected": 30,
-        "coverage_pct": 93.3
+        "coverage_pct": 46.7
+      },
+      {
+        "country_iso3": "CHN",
+        "country_name": "China",
+        "sector_id": "semiconductors",
+        "sector_name": "Semiconductors and Electronics",
+        "indicators": 2,
+        "observations": 30,
+        "expected": 30,
+        "coverage_pct": 100.0
+      },
+      {
+        "country_iso3": "CHN",
+        "country_name": "China",
+        "sector_id": "ai_software",
+        "sector_name": "AI and Software",
+        "indicators": 2,
+        "observations": 29,
+        "expected": 30,
+        "coverage_pct": 96.7
+      },
+      {
+        "country_iso3": "CHN",
+        "country_name": "China",
+        "sector_id": "renewable_energy",
+        "sector_name": "Renewable Energy",
+        "indicators": 2,
+        "observations": 24,
+        "expected": 30,
+        "coverage_pct": 80.0
+      },
+      {
+        "country_iso3": "CHN",
+        "country_name": "China",
+        "sector_id": "automotive_ev",
+        "sector_name": "Automotive and Electric Vehicles",
+        "indicators": 2,
+        "observations": 30,
+        "expected": 30,
+        "coverage_pct": 100.0
+      },
+      {
+        "country_iso3": "CHN",
+        "country_name": "China",
+        "sector_id": "healthcare_biotech",
+        "sector_name": "Healthcare and Biotechnology",
+        "indicators": 1,
+        "observations": 14,
+        "expected": 30,
+        "coverage_pct": 46.7
+      },
+      {
+        "country_iso3": "DEU",
+        "country_name": "Germany",
+        "sector_id": "semiconductors",
+        "sector_name": "Semiconductors and Electronics",
+        "indicators": 2,
+        "observations": 30,
+        "expected": 30,
+        "coverage_pct": 100.0
+      },
+      {
+        "country_iso3": "DEU",
+        "country_name": "Germany",
+        "sector_id": "ai_software",
+        "sector_name": "AI and Software",
+        "indicators": 2,
+        "observations": 29,
+        "expected": 30,
+        "coverage_pct": 96.7
+      },
+      {
+        "country_iso3": "DEU",
+        "country_name": "Germany",
+        "sector_id": "renewable_energy",
+        "sector_name": "Renewable Energy",
+        "indicators": 2,
+        "observations": 24,
+        "expected": 30,
+        "coverage_pct": 80.0
+      },
+      {
+        "country_iso3": "DEU",
+        "country_name": "Germany",
+        "sector_id": "automotive_ev",
+        "sector_name": "Automotive and Electric Vehicles",
+        "indicators": 2,
+        "observations": 30,
+        "expected": 30,
+        "coverage_pct": 100.0
+      },
+      {
+        "country_iso3": "DEU",
+        "country_name": "Germany",
+        "sector_id": "healthcare_biotech",
+        "sector_name": "Healthcare and Biotechnology",
+        "indicators": 1,
+        "observations": 15,
+        "expected": 30,
+        "coverage_pct": 50.0
+      },
+      {
+        "country_iso3": "JPN",
+        "country_name": "Japan",
+        "sector_id": "semiconductors",
+        "sector_name": "Semiconductors and Electronics",
+        "indicators": 2,
+        "observations": 30,
+        "expected": 30,
+        "coverage_pct": 100.0
+      },
+      {
+        "country_iso3": "JPN",
+        "country_name": "Japan",
+        "sector_id": "ai_software",
+        "sector_name": "AI and Software",
+        "indicators": 2,
+        "observations": 29,
+        "expected": 30,
+        "coverage_pct": 96.7
+      },
+      {
+        "country_iso3": "JPN",
+        "country_name": "Japan",
+        "sector_id": "renewable_energy",
+        "sector_name": "Renewable Energy",
+        "indicators": 2,
+        "observations": 24,
+        "expected": 30,
+        "coverage_pct": 80.0
+      },
+      {
+        "country_iso3": "JPN",
+        "country_name": "Japan",
+        "sector_id": "automotive_ev",
+        "sector_name": "Automotive and Electric Vehicles",
+        "indicators": 2,
+        "observations": 30,
+        "expected": 30,
+        "coverage_pct": 100.0
+      },
+      {
+        "country_iso3": "JPN",
+        "country_name": "Japan",
+        "sector_id": "healthcare_biotech",
+        "sector_name": "Healthcare and Biotechnology",
+        "indicators": 1,
+        "observations": 14,
+        "expected": 30,
+        "coverage_pct": 46.7
+      },
+      {
+        "country_iso3": "IND",
+        "country_name": "India",
+        "sector_id": "semiconductors",
+        "sector_name": "Semiconductors and Electronics",
+        "indicators": 2,
+        "observations": 30,
+        "expected": 30,
+        "coverage_pct": 100.0
+      },
+      {
+        "country_iso3": "IND",
+        "country_name": "India",
+        "sector_id": "ai_software",
+        "sector_name": "AI and Software",
+        "indicators": 2,
+        "observations": 26,
+        "expected": 30,
+        "coverage_pct": 86.7
+      },
+      {
+        "country_iso3": "IND",
+        "country_name": "India",
+        "sector_id": "renewable_energy",
+        "sector_name": "Renewable Energy",
+        "indicators": 2,
+        "observations": 24,
+        "expected": 30,
+        "coverage_pct": 80.0
+      },
+      {
+        "country_iso3": "IND",
+        "country_name": "India",
+        "sector_id": "automotive_ev",
+        "sector_name": "Automotive and Electric Vehicles",
+        "indicators": 2,
+        "observations": 30,
+        "expected": 30,
+        "coverage_pct": 100.0
+      },
+      {
+        "country_iso3": "IND",
+        "country_name": "India",
+        "sector_id": "healthcare_biotech",
+        "sector_name": "Healthcare and Biotechnology",
+        "indicators": 1,
+        "observations": 14,
+        "expected": 30,
+        "coverage_pct": 46.7
       },
       {
         "country_iso3": "GBR",
@@ -442,14 +546,14 @@
         "country_name": "United Kingdom",
         "sector_id": "healthcare_biotech",
         "sector_name": "Healthcare and Biotechnology",
-        "indicators": 2,
-        "observations": 30,
+        "indicators": 1,
+        "observations": 15,
         "expected": 30,
-        "coverage_pct": 100.0
+        "coverage_pct": 50.0
       },
       {
-        "country_iso3": "JPN",
-        "country_name": "Japan",
+        "country_iso3": "FRA",
+        "country_name": "France",
         "sector_id": "semiconductors",
         "sector_name": "Semiconductors and Electronics",
         "indicators": 2,
@@ -458,8 +562,8 @@
         "coverage_pct": 100.0
       },
       {
-        "country_iso3": "JPN",
-        "country_name": "Japan",
+        "country_iso3": "FRA",
+        "country_name": "France",
         "sector_id": "ai_software",
         "sector_name": "AI and Software",
         "indicators": 2,
@@ -468,8 +572,8 @@
         "coverage_pct": 96.7
       },
       {
-        "country_iso3": "JPN",
-        "country_name": "Japan",
+        "country_iso3": "FRA",
+        "country_name": "France",
         "sector_id": "renewable_energy",
         "sector_name": "Renewable Energy",
         "indicators": 2,
@@ -478,8 +582,8 @@
         "coverage_pct": 80.0
       },
       {
-        "country_iso3": "JPN",
-        "country_name": "Japan",
+        "country_iso3": "FRA",
+        "country_name": "France",
         "sector_id": "automotive_ev",
         "sector_name": "Automotive and Electric Vehicles",
         "indicators": 2,
@@ -488,14 +592,414 @@
         "coverage_pct": 100.0
       },
       {
-        "country_iso3": "JPN",
-        "country_name": "Japan",
+        "country_iso3": "FRA",
+        "country_name": "France",
         "sector_id": "healthcare_biotech",
         "sector_name": "Healthcare and Biotechnology",
+        "indicators": 1,
+        "observations": 15,
+        "expected": 30,
+        "coverage_pct": 50.0
+      },
+      {
+        "country_iso3": "ITA",
+        "country_name": "Italy",
+        "sector_id": "semiconductors",
+        "sector_name": "Semiconductors and Electronics",
+        "indicators": 2,
+        "observations": 29,
+        "expected": 30,
+        "coverage_pct": 96.7
+      },
+      {
+        "country_iso3": "ITA",
+        "country_name": "Italy",
+        "sector_id": "ai_software",
+        "sector_name": "AI and Software",
+        "indicators": 2,
+        "observations": 29,
+        "expected": 30,
+        "coverage_pct": 96.7
+      },
+      {
+        "country_iso3": "ITA",
+        "country_name": "Italy",
+        "sector_id": "renewable_energy",
+        "sector_name": "Renewable Energy",
+        "indicators": 2,
+        "observations": 24,
+        "expected": 30,
+        "coverage_pct": 80.0
+      },
+      {
+        "country_iso3": "ITA",
+        "country_name": "Italy",
+        "sector_id": "automotive_ev",
+        "sector_name": "Automotive and Electric Vehicles",
+        "indicators": 2,
+        "observations": 30,
+        "expected": 30,
+        "coverage_pct": 100.0
+      },
+      {
+        "country_iso3": "ITA",
+        "country_name": "Italy",
+        "sector_id": "healthcare_biotech",
+        "sector_name": "Healthcare and Biotechnology",
+        "indicators": 1,
+        "observations": 15,
+        "expected": 30,
+        "coverage_pct": 50.0
+      },
+      {
+        "country_iso3": "CAN",
+        "country_name": "Canada",
+        "sector_id": "semiconductors",
+        "sector_name": "Semiconductors and Electronics",
+        "indicators": 2,
+        "observations": 30,
+        "expected": 30,
+        "coverage_pct": 100.0
+      },
+      {
+        "country_iso3": "CAN",
+        "country_name": "Canada",
+        "sector_id": "ai_software",
+        "sector_name": "AI and Software",
+        "indicators": 2,
+        "observations": 30,
+        "expected": 30,
+        "coverage_pct": 100.0
+      },
+      {
+        "country_iso3": "CAN",
+        "country_name": "Canada",
+        "sector_id": "renewable_energy",
+        "sector_name": "Renewable Energy",
+        "indicators": 2,
+        "observations": 24,
+        "expected": 30,
+        "coverage_pct": 80.0
+      },
+      {
+        "country_iso3": "CAN",
+        "country_name": "Canada",
+        "sector_id": "automotive_ev",
+        "sector_name": "Automotive and Electric Vehicles",
         "indicators": 2,
         "observations": 28,
         "expected": 30,
         "coverage_pct": 93.3
+      },
+      {
+        "country_iso3": "CAN",
+        "country_name": "Canada",
+        "sector_id": "healthcare_biotech",
+        "sector_name": "Healthcare and Biotechnology",
+        "indicators": 1,
+        "observations": 15,
+        "expected": 30,
+        "coverage_pct": 50.0
+      },
+      {
+        "country_iso3": "BRA",
+        "country_name": "Brazil",
+        "sector_id": "semiconductors",
+        "sector_name": "Semiconductors and Electronics",
+        "indicators": 2,
+        "observations": 30,
+        "expected": 30,
+        "coverage_pct": 100.0
+      },
+      {
+        "country_iso3": "BRA",
+        "country_name": "Brazil",
+        "sector_id": "ai_software",
+        "sector_name": "AI and Software",
+        "indicators": 2,
+        "observations": 29,
+        "expected": 30,
+        "coverage_pct": 96.7
+      },
+      {
+        "country_iso3": "BRA",
+        "country_name": "Brazil",
+        "sector_id": "renewable_energy",
+        "sector_name": "Renewable Energy",
+        "indicators": 2,
+        "observations": 24,
+        "expected": 30,
+        "coverage_pct": 80.0
+      },
+      {
+        "country_iso3": "BRA",
+        "country_name": "Brazil",
+        "sector_id": "automotive_ev",
+        "sector_name": "Automotive and Electric Vehicles",
+        "indicators": 2,
+        "observations": 30,
+        "expected": 30,
+        "coverage_pct": 100.0
+      },
+      {
+        "country_iso3": "BRA",
+        "country_name": "Brazil",
+        "sector_id": "healthcare_biotech",
+        "sector_name": "Healthcare and Biotechnology",
+        "indicators": 1,
+        "observations": 14,
+        "expected": 30,
+        "coverage_pct": 46.7
+      },
+      {
+        "country_iso3": "KOR",
+        "country_name": "South Korea",
+        "sector_id": "semiconductors",
+        "sector_name": "Semiconductors and Electronics",
+        "indicators": 2,
+        "observations": 30,
+        "expected": 30,
+        "coverage_pct": 100.0
+      },
+      {
+        "country_iso3": "KOR",
+        "country_name": "South Korea",
+        "sector_id": "ai_software",
+        "sector_name": "AI and Software",
+        "indicators": 2,
+        "observations": 29,
+        "expected": 30,
+        "coverage_pct": 96.7
+      },
+      {
+        "country_iso3": "KOR",
+        "country_name": "South Korea",
+        "sector_id": "renewable_energy",
+        "sector_name": "Renewable Energy",
+        "indicators": 2,
+        "observations": 24,
+        "expected": 30,
+        "coverage_pct": 80.0
+      },
+      {
+        "country_iso3": "KOR",
+        "country_name": "South Korea",
+        "sector_id": "automotive_ev",
+        "sector_name": "Automotive and Electric Vehicles",
+        "indicators": 2,
+        "observations": 30,
+        "expected": 30,
+        "coverage_pct": 100.0
+      },
+      {
+        "country_iso3": "KOR",
+        "country_name": "South Korea",
+        "sector_id": "healthcare_biotech",
+        "sector_name": "Healthcare and Biotechnology",
+        "indicators": 1,
+        "observations": 15,
+        "expected": 30,
+        "coverage_pct": 50.0
+      },
+      {
+        "country_iso3": "MEX",
+        "country_name": "Mexico",
+        "sector_id": "semiconductors",
+        "sector_name": "Semiconductors and Electronics",
+        "indicators": 2,
+        "observations": 30,
+        "expected": 30,
+        "coverage_pct": 100.0
+      },
+      {
+        "country_iso3": "MEX",
+        "country_name": "Mexico",
+        "sector_id": "ai_software",
+        "sector_name": "AI and Software",
+        "indicators": 2,
+        "observations": 30,
+        "expected": 30,
+        "coverage_pct": 100.0
+      },
+      {
+        "country_iso3": "MEX",
+        "country_name": "Mexico",
+        "sector_id": "renewable_energy",
+        "sector_name": "Renewable Energy",
+        "indicators": 2,
+        "observations": 24,
+        "expected": 30,
+        "coverage_pct": 80.0
+      },
+      {
+        "country_iso3": "MEX",
+        "country_name": "Mexico",
+        "sector_id": "automotive_ev",
+        "sector_name": "Automotive and Electric Vehicles",
+        "indicators": 2,
+        "observations": 30,
+        "expected": 30,
+        "coverage_pct": 100.0
+      },
+      {
+        "country_iso3": "MEX",
+        "country_name": "Mexico",
+        "sector_id": "healthcare_biotech",
+        "sector_name": "Healthcare and Biotechnology",
+        "indicators": 1,
+        "observations": 14,
+        "expected": 30,
+        "coverage_pct": 46.7
+      },
+      {
+        "country_iso3": "AUS",
+        "country_name": "Australia",
+        "sector_id": "semiconductors",
+        "sector_name": "Semiconductors and Electronics",
+        "indicators": 2,
+        "observations": 30,
+        "expected": 30,
+        "coverage_pct": 100.0
+      },
+      {
+        "country_iso3": "AUS",
+        "country_name": "Australia",
+        "sector_id": "ai_software",
+        "sector_name": "AI and Software",
+        "indicators": 2,
+        "observations": 22,
+        "expected": 30,
+        "coverage_pct": 73.3
+      },
+      {
+        "country_iso3": "AUS",
+        "country_name": "Australia",
+        "sector_id": "renewable_energy",
+        "sector_name": "Renewable Energy",
+        "indicators": 2,
+        "observations": 24,
+        "expected": 30,
+        "coverage_pct": 80.0
+      },
+      {
+        "country_iso3": "AUS",
+        "country_name": "Australia",
+        "sector_id": "automotive_ev",
+        "sector_name": "Automotive and Electric Vehicles",
+        "indicators": 2,
+        "observations": 30,
+        "expected": 30,
+        "coverage_pct": 100.0
+      },
+      {
+        "country_iso3": "AUS",
+        "country_name": "Australia",
+        "sector_id": "healthcare_biotech",
+        "sector_name": "Healthcare and Biotechnology",
+        "indicators": 1,
+        "observations": 14,
+        "expected": 30,
+        "coverage_pct": 46.7
+      },
+      {
+        "country_iso3": "ESP",
+        "country_name": "Spain",
+        "sector_id": "semiconductors",
+        "sector_name": "Semiconductors and Electronics",
+        "indicators": 2,
+        "observations": 30,
+        "expected": 30,
+        "coverage_pct": 100.0
+      },
+      {
+        "country_iso3": "ESP",
+        "country_name": "Spain",
+        "sector_id": "ai_software",
+        "sector_name": "AI and Software",
+        "indicators": 2,
+        "observations": 26,
+        "expected": 30,
+        "coverage_pct": 86.7
+      },
+      {
+        "country_iso3": "ESP",
+        "country_name": "Spain",
+        "sector_id": "renewable_energy",
+        "sector_name": "Renewable Energy",
+        "indicators": 2,
+        "observations": 24,
+        "expected": 30,
+        "coverage_pct": 80.0
+      },
+      {
+        "country_iso3": "ESP",
+        "country_name": "Spain",
+        "sector_id": "automotive_ev",
+        "sector_name": "Automotive and Electric Vehicles",
+        "indicators": 2,
+        "observations": 30,
+        "expected": 30,
+        "coverage_pct": 100.0
+      },
+      {
+        "country_iso3": "ESP",
+        "country_name": "Spain",
+        "sector_id": "healthcare_biotech",
+        "sector_name": "Healthcare and Biotechnology",
+        "indicators": 1,
+        "observations": 14,
+        "expected": 30,
+        "coverage_pct": 46.7
+      },
+      {
+        "country_iso3": "IDN",
+        "country_name": "Indonesia",
+        "sector_id": "semiconductors",
+        "sector_name": "Semiconductors and Electronics",
+        "indicators": 2,
+        "observations": 29,
+        "expected": 30,
+        "coverage_pct": 96.7
+      },
+      {
+        "country_iso3": "IDN",
+        "country_name": "Indonesia",
+        "sector_id": "ai_software",
+        "sector_name": "AI and Software",
+        "indicators": 2,
+        "observations": 21,
+        "expected": 30,
+        "coverage_pct": 70.0
+      },
+      {
+        "country_iso3": "IDN",
+        "country_name": "Indonesia",
+        "sector_id": "renewable_energy",
+        "sector_name": "Renewable Energy",
+        "indicators": 2,
+        "observations": 24,
+        "expected": 30,
+        "coverage_pct": 80.0
+      },
+      {
+        "country_iso3": "IDN",
+        "country_name": "Indonesia",
+        "sector_id": "automotive_ev",
+        "sector_name": "Automotive and Electric Vehicles",
+        "indicators": 2,
+        "observations": 30,
+        "expected": 30,
+        "coverage_pct": 100.0
+      },
+      {
+        "country_iso3": "IDN",
+        "country_name": "Indonesia",
+        "sector_id": "healthcare_biotech",
+        "sector_name": "Healthcare and Biotechnology",
+        "indicators": 1,
+        "observations": 14,
+        "expected": 30,
+        "coverage_pct": 46.7
       }
     ],
     "employment_matrix": [
@@ -1897,7 +2401,9 @@
       "year_min": 2010,
       "year_max": 2024,
       "value_column": "investment_usd"
-    }
+    },
+    "countries_count": 15,
+    "sectors_count": 5
   },
   "missing_data": [
     {
@@ -2015,5 +2521,102 @@
         "2"
       ]
     }
+  },
+  "project_scope": {
+    "title": "Top 15 Sovereign Economies by World Bank GDP",
+    "description": "Cross-national empirical intelligence and econometric forecasting platform across the 15 largest global economies.",
+    "country_count": 15,
+    "countries": [
+      {
+        "iso3": "USA",
+        "name": "United States",
+        "currency": "USD",
+        "region": "North America"
+      },
+      {
+        "iso3": "CHN",
+        "name": "China",
+        "currency": "CNY",
+        "region": "East Asia"
+      },
+      {
+        "iso3": "DEU",
+        "name": "Germany",
+        "currency": "EUR",
+        "region": "Europe"
+      },
+      {
+        "iso3": "JPN",
+        "name": "Japan",
+        "currency": "JPY",
+        "region": "East Asia"
+      },
+      {
+        "iso3": "IND",
+        "name": "India",
+        "currency": "INR",
+        "region": "South Asia"
+      },
+      {
+        "iso3": "GBR",
+        "name": "United Kingdom",
+        "currency": "GBP",
+        "region": "Europe"
+      },
+      {
+        "iso3": "FRA",
+        "name": "France",
+        "currency": "EUR",
+        "region": "Europe"
+      },
+      {
+        "iso3": "ITA",
+        "name": "Italy",
+        "currency": "EUR",
+        "region": "Europe"
+      },
+      {
+        "iso3": "CAN",
+        "name": "Canada",
+        "currency": "CAD",
+        "region": "North America"
+      },
+      {
+        "iso3": "BRA",
+        "name": "Brazil",
+        "currency": "BRL",
+        "region": "Latin America"
+      },
+      {
+        "iso3": "KOR",
+        "name": "South Korea",
+        "currency": "KRW",
+        "region": "East Asia"
+      },
+      {
+        "iso3": "MEX",
+        "name": "Mexico",
+        "currency": "MXN",
+        "region": "Latin America"
+      },
+      {
+        "iso3": "AUS",
+        "name": "Australia",
+        "currency": "AUD",
+        "region": "Oceania"
+      },
+      {
+        "iso3": "ESP",
+        "name": "Spain",
+        "currency": "EUR",
+        "region": "Europe"
+      },
+      {
+        "iso3": "IDN",
+        "name": "Indonesia",
+        "currency": "IDR",
+        "region": "Southeast Asia"
+      }
+    ]
   }
 }

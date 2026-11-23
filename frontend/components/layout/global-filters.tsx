@@ -154,10 +154,13 @@ export function GlobalFilters({ compact = false }: { compact?: boolean }) {
         <select
           aria-label="Start year"
           value={from}
-          onChange={(event) => setYears(Number(event.target.value), Math.max(Number(event.target.value), to))}
+          onChange={(event) => {
+            const newFrom = Number(event.target.value);
+            setYears(newFrom, Math.max(newFrom + 1, to));
+          }}
           className="h-6 cursor-pointer bg-transparent font-mono text-xs text-ink outline-none"
         >
-          {YEARS.map((year) => (
+          {YEARS.filter((year) => year < 2024).map((year) => (
             <option key={year} value={year}>
               {year}
             </option>
@@ -167,10 +170,13 @@ export function GlobalFilters({ compact = false }: { compact?: boolean }) {
         <select
           aria-label="End year"
           value={to}
-          onChange={(event) => setYears(Math.min(from, Number(event.target.value)), Number(event.target.value))}
+          onChange={(event) => {
+            const newTo = Number(event.target.value);
+            setYears(Math.min(from, newTo - 1), newTo);
+          }}
           className="h-6 cursor-pointer bg-transparent font-mono text-xs text-ink outline-none"
         >
-          {YEARS.map((year) => (
+          {YEARS.filter((year) => year > 2010).map((year) => (
             <option key={year} value={year}>
               {year}
             </option>

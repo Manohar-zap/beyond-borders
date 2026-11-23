@@ -1,14 +1,14 @@
 {
-  "rows": 5105,
+  "rows": 13135,
   "columns": 24,
-  "countries": 6,
+  "countries": 15,
   "sectors": 5,
   "occupations": 10,
   "year_range": [
     2010,
     2024
   ],
-  "missing_values": 10678,
-  "missing_pct": 8.72,
+  "missing_values": 27515,
+  "missing_pct": 8.73,
   "duplicates": 0
 }

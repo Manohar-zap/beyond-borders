@@ -31,3 +31,26 @@ yarn-error.log*
 Thumbs.db
 .vscode/
 .idea/
+
+# Legacy root artifacts
+/config/
+/data/
+/logs/
+/models/
+/notebooks/
+/outputs/
+/reports/
+/src/
+/tests/
+/web/
+app.py
+server.py
+run_web.py
+run_pipeline.py
+run_dashboard.bat
+run_pipeline.bat
+run_tests.bat
+start_web.bat
+export_web_data.py
+requirements.txt
+

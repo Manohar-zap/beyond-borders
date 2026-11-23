@@ -228,6 +228,13 @@ def outlook(
     granularity: str = Query("section"),
 ) -> dict[str, Any]:
     require_dataset("forecast")
+    if dataset == "country_sector" and granularity == "section":
+        granularity = "country_sector"
+    elif dataset == "living_cost" and granularity == "section":
+        granularity = "living_cost"
+    elif dataset == "salary" and granularity == "section":
+        granularity = "occupation"
+
     actual_sql = ""
     actual_params: list[Any] = [country_iso3]
     unit = ""

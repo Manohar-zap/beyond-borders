@@ -1,0 +1,11 @@
+{
+  "rows": 8214,
+  "columns": 31,
+  "countries": 15,
+  "sectors": 6,
+  "occupations": 11,
+  "year_range": "N/A",
+  "missing_values": 0,
+  "missing_pct": 0.0,
+  "duplicates": 0
+}

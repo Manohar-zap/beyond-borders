@@ -71,7 +71,11 @@ export function FilterProvider({ children }: { children: ReactNode }) {
   );
   const to = useMemo(() => {
     const value = parseYear(searchParams.get("to"), DEFAULT_TO);
-    return Math.max(from, value);
+    // Guarantee at least a 1-year span so time-series lines connect and CAGR is mathematically calculable
+    if (value <= from) {
+      return from < 2024 ? from + 1 : 2024;
+    }
+    return value;
   }, [searchParams, from]);
 
   const push = useCallback(
@@ -118,8 +122,12 @@ export function FilterProvider({ children }: { children: ReactNode }) {
 
   const setYears = useCallback(
     (nextFrom: number, nextTo: number) => {
-      const low = Math.min(nextFrom, nextTo);
-      const high = Math.max(nextFrom, nextTo);
+      let low = Math.min(nextFrom, nextTo);
+      let high = Math.max(nextFrom, nextTo);
+      if (low === high) {
+        if (high < 2024) high = low + 1;
+        else low = Math.max(2010, high - 1);
+      }
       push({ from: low, to: high });
     },
     [push],

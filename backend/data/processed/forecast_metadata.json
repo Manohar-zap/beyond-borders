@@ -1,43 +1,43 @@
 {
-  "generated_at": "2026-11-22T09:35:38Z",
+  "generated_at": "2026-11-23T13:14:19Z",
   "model_version": "bb-forecast-1.0.0",
   "forecast_period": [
     2025,
     2030
   ],
-  "rows": 2946,
-  "series": 491,
+  "rows": 8214,
+  "series": 1369,
   "by_dataset": {
-    "employment": 1872,
-    "salary": 540,
-    "country_sector": 354,
-    "living_cost": 180
+    "employment": 4860,
+    "salary": 2124,
+    "country_sector": 780,
+    "living_cost": 450
   },
   "by_status": {
-    "validated": 1488,
-    "moderate_error": 882,
-    "high_error": 576
+    "validated": 4380,
+    "moderate_error": 2394,
+    "high_error": 1440
   },
   "status_table": {
     "country_sector": {
-      "high_error": 18,
-      "moderate_error": 90,
-      "validated": 246
+      "high_error": 72,
+      "moderate_error": 228,
+      "validated": 480
     },
     "employment": {
-      "high_error": 378,
-      "moderate_error": 636,
-      "validated": 858
+      "high_error": 1032,
+      "moderate_error": 1566,
+      "validated": 2262
     },
     "living_cost": {
-      "high_error": 36,
-      "moderate_error": 6,
-      "validated": 138
+      "high_error": 78,
+      "moderate_error": 48,
+      "validated": 324
     },
     "salary": {
-      "high_error": 144,
-      "moderate_error": 150,
-      "validated": 246
+      "high_error": 258,
+      "moderate_error": 552,
+      "validated": 1314
     }
   },
   "method": {

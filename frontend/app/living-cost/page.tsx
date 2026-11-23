@@ -241,7 +241,7 @@ export default function LivingCostPage() {
           option={timeSeriesOption({
             series,
             xMin: from,
-            xMax: to,
+            xMax: Math.max(from + 1, to),
             yName: categoryUnit,
             valueFormatter: (value) =>
               category === "consumer_price_inflation"
@@ -322,7 +322,7 @@ export default function LivingCostPage() {
           option={timeSeriesOption({
             series: inflationSeries,
             xMin: from,
-            xMax: to,
+            xMax: Math.max(from + 1, to),
             yName: "% annual",
             valueFormatter: (value) => `${value.toFixed(1)}%`,
           })}
@@ -354,7 +354,7 @@ export default function LivingCostPage() {
           option={timeSeriesOption({
             series: consumptionSeries,
             xMin: from,
-            xMax: to,
+            xMax: Math.max(from + 1, to),
             yName: "constant 2015 US$",
             valueFormatter: (value) => `$${formatNumber(value, { maximumFractionDigits: 0 })}`,
           })}

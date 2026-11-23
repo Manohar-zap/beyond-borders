@@ -1,165 +1,116 @@
-# Beyond Borders
+# Beyond Borders: Global Employment Opportunities & Quality-of-Life Predictor
 
-> Global Employment Opportunities and Sector Development Intelligence
-
-Beyond Borders is an intelligence platform comparing cross-border workforce dynamics, sector development, real wage trends, and econometric forecasting across major global economies. This research-grade dashboard supports up to 100 countries and 12 sectors while maintaining full functionality with the current 6-country/5-sector implementation.
-
-Data sources: World Bank WDI & ILOSTAT. Visualization: Apache ECharts. Storage: DuckDB + Parquet.
+> **Research-first • Reproducible • Evidence-based • Python**  
+> **Historical data: 2010–2024 | Forecast horizon: 2025–2035 | Global country comparison**
 
 ---
 
-## Architecture
+## 🎯 Executive Overview
+**Beyond Borders** is a research-grade econometric forecasting and decision-support platform designed to compare global labour markets and quality of life. The system synthesizes official multi-source data across 45 economies, computes multidimensional opportunity and sustainability scores, and estimates trajectory paths through 2035 with confidence intervals and macro scenarios.
 
-- **Backend**: FastAPI with DuckDB querying parquet/CSV data stores. Datasets: country_sector, employment, salary, living_cost, country_context, forecast, industrial_projects.
-- **Frontend**: Next.js 15 (App Router), React 19, Tailwind CSS, Lucide icons, Apache ECharts (`echarts-for-react`), and TanStack Query.
-- **Statistical Python**: statsmodels for ETS damped trend, holdout backtesting, rolling-origin cross-validation.
-- **Visualization**: Apache ECharts with custom theme (dark mode, country/ sector color palettes).
-- **Export**: CSV and PNG export for all charts and data tables.
+### 🏛️ The Three Research Pillars
+1. **Employment Opportunity Score (EOS)**: Labour demand, low youth and adult unemployment, high-skill employment share, productivity, tech occupational projections, and AI augmentation potential.
+2. **Financial Sustainability Score (FSS)**: Real purchasing-power wages (USD PPP), statutory minimum wage, effective personal income taxes and employee social contributions, housing affordability, and household savings capacity.
+3. **Quality of Life Score (QLS)**: Universal health metrics (life expectancy, physician density, out-of-pocket spending), intentional homicide rates, fine particulate air pollution (PM2.5), and subjective well-being (Cantril ladder).
 
 ---
 
-## Getting Started
-
-### 1. Backend Setup
-
-```bash
-cd backend
-python -m venv .venv
-# On Windows:
-.venv\Scripts\activate
-# On Linux/macOS:
-# source .venv/bin/activate
-
-pip install -r requirements.txt
-python -m uvicorn app.main:app --host 127.0.0.1 --port 8000 --reload
+## 📁 Repository Structure
 ```
-
-The API documentation will be available at [http://127.0.0.1:8000/docs](http://127.0.0.1:8000/docs).
-
-### 2. Frontend Setup
-
-```bash
-cd frontend
-npm install
-npm run dev
-```
-
-Open [http://localhost:3000](http://localhost:3000) (or port 3001 if port 3000 is occupied) in your browser.
-
----
-
-## API Endpoints
-
-### Sector Registry
-
-- `GET /api/sectors/registry` — Sector definitions with documented proxy indicators and limitations.
-- `GET /api/sectors/indicators` — Indicator coverage from the country_sector processed table.
-- `GET /api/sectors series` — Country-sector indicator series with filtering.
-
-### Forecast
-
-- `GET /api/forecast/summary` — Forecast row counts by dataset and validation status.
-- `GET /api/forecast/validation` — Holdout validation metrics (MAPE, RMSE) per series.
-- `GET /api/forecast/availability` — Series availability by dataset, country, and status.
-- `GET /api/forecast/outlook` — Observed history + baseline forecast + 80% interval per series.
-
-### Quality
-
-- `GET /api/quality/summary` — Row counts, column counts, null counts per dataset.
-- `GET /api/quality/coverage` — Coverage matrices from metadata.
-- `GET /api/quality/missing` — Known gaps and their treatment.
-- `GET /api/quality/schema` — Physical schema of processed datasets.
-- `GET /api/quality/lineage` — Dataset lineage from source to processed file.
-
-### Metadata
-
-- `GET /api/meta` — Full project metadata including countries, sectors, occupations, degree mapping, and dataset status.
-
-### Salary
-
-- `GET /api/salary/series` — Nominal / real (2010 CPI) / PPP-adjusted monthly earnings.
-- `GET /api/salary/latest` — Latest salary observation per country/occupation.
-
-### Living Cost
-
-- `GET /api/living_cost/latest` — Latest living cost observations by category.
-- `GET /api/living_cost/series` — Time series by expense category.
-
-### Industrial Projects
-
-- `GET /api/industrial/projects` — Industrial project data structure (template).
-
----
-
-## Features
-
-- **Sector Intelligence**: 5 sector definitions with direct and proxy indicators, explicit limitations, and official industry codes. Registry endpoint serves documented proxy indicators without zero-filling or fabrication.
-- **Employment & Salary Trends**: Macro employment distributions, ISCO skill-level aggregations, nominal/real/PPP wage parity. Real values deflated with World Bank CPI (2010=100); PPP values divide by private-consumption PPP conversion factor.
-- **Living Cost Parity**: Inflation, CPI indexes, and household expenditure benchmarks across 5 categories (consumer_price_index, consumer_price_inflation, household_consumption_per_capita, ppp_gdp, ppp_private_consumption). National-level only; city-level data unavailable.
-- **Forecast Engine**: ETS damped additive trend (Holt) with OLS linear-trend fallback. Holdout validation of final 2–3 annual observations. Validation statuses: validated (MAPE ≤ 10%), moderate_error (MAPE 10–25%), high_error (MAPE > 25%). Rolling-origin cross-validation available via `scripts/forecast.py`. Forecasts stored separately from historical data — never merged.
-- **Occupational Mapping**: ISCO-08 major group codes (1–9 + TOTAL). Degree-to-occupation mapping: less_than_high_school, high_school, some_college, bachelors, graduate.
-- **Industrial Project Data**: Template structure for investment-to-employment experiment design. Currently empty (0 rows) — intended as a data entry template.
-- **Export Capabilities**: Direct CSV and PNG export for all charts and data tables.
-- **No Zero-Filling**: Missing data is retained as null with documented treatment. Proxies are explicitly flagged.
-- **Forecast-Observation Separation**: Forecasts are stored in `forecast.parquet` and never merged into historical dataset parquet files.
-- **100-Country / 12-Sector Architecture**: Designed to scale while supporting the current 6-country/5-sector implementation.
-
----
-
-## Page Dashboard
-
-| Page | Path |
-|------|------|
-| Global Filter Provider | `/` |
-| Employment | `/employment` |
-| Salary (nominal/real/PPP) | `/salary` |
-| Sector Development | `/sectors` |
-| Country Comparison | `/comparison` |
-| Forecast & Outlook | `/forecast` |
-| Data Quality & Methodology | `/methodology` |
-| Living Cost | `/living-cost` |
-
----
-
-## Data Quality Principles
-
-- **No fabrication**: Missing values are kept as null, never replaced with zero or synthetic estimates.
-- **Proxies documented**: Sector indicators are documented proxies with explicit limitations and source preferences.
-- **Classification variants retained**: Canada ISIC Rev.3/ISCO-88 flags are preserved; silent harmonization is avoided.
-- **Japan notes**: No occupation-level earnings series for Japan; shown as unavailable.
-- **Forecasts separate**: Trend projections stored in distinct table; never overwrite observations.
-- **Coverage transparent**: Coverage matrices computed from processed Parquet files; expected cells use 2010–2024 annual grid.
-
----
-
-## Development
-
-### Regenerating Data
-
-```bash
-cd backend
-python -m uvicorn app.main:app --host 127.0.0.1 --port 8000 --reload
-# Or run individual scripts:
-python scripts/ingest.py
-python scripts/forecast.py
-```
-
-### Adding a New Sector
-
-1. Add a `SectorDefinition` entry to `backend/app/indicators/sector_registry.py` with direct/proxy indicators and `mapping_limitations`.
-2. Register the sector in `metadata.json` under `coverage` if needed.
-3. Add API routes in `backend/app/routers/sectors.py` if new endpoints are needed.
-
-### Rolling-Origin Forecast Validation
-
-```bash
-python scripts/forecast.py  # generates baseline forecasts with holdout validation
-# Rolling-origin evaluation is implemented in scripts/forecast.py via rolling_origin_validate()
-# The function performs time-series cross-validation with expanding training windows.
+r_pro/
+├── README.md                           # Documentation & execution guide
+├── requirements.txt                    # Pinned Python package dependencies
+├── run_pipeline.py                     # One-command end-to-end execution pipeline
+├── app.py                              # Interactive Streamlit dashboard
+├── config/
+│   ├── indicators.yml                  # 40 core indicators with metadata, units, polarities
+│   ├── sources.yml                     # Source catalog (World Bank, ILO, OECD, WHO, etc.)
+│   ├── country_crosswalk.csv           # 45 countries with ISO codes, regions, income groups
+│   └── analysis_config.yml             # Window parameters, scoring weights, worker profiles
+├── data/
+│   ├── raw/                            # Immutable original downloads with checksums
+│   ├── interim/                        # Cleaned source extractions
+│   ├── processed/                      # master_panel_country_year and master_panel_long
+│   └── reference/                      # Code lists, crosswalks, benchmark seed panel
+├── reports/
+│   ├── acquisition_manifest.csv        # Detailed provenance status and download records
+│   ├── checksum_manifest.csv           # SHA-256 validation log
+│   ├── schema_audit.csv                # Data types, null counts, min/max values
+│   ├── dataset_inventory.csv           # Registered files and record volumes
+│   ├── missingness_report.csv          # Country-indicator missingness analysis
+│   └── coverage_report.csv             # Coverage percentages per economy
+├── outputs/
+│   ├── figures/                        # Scatter plots, trend paths, and radar charts
+│   ├── tables/                         # Univariate, bivariate, momentum, and rankings tables
+│   └── exports/                        # forecast_results.parquet & forecast_results.csv
+├── src/
+│   ├── acquisition/                    # Source adapters & download orchestrator
+│   ├── ingestion/                      # Schema inspection and raw ingestion
+│   ├── validation/                     # Natural key audits and boundary rules
+│   ├── preprocessing/                  # Harmonizer, derived metrics, and panel builder
+│   ├── analysis/                       # Univariate, bivariate, and momentum estimators
+│   ├── scoring/                        # Normalizer, sub-indices, composite scorer, sensitivity
+│   ├── forecasting/                    # Naive, Drift, ETS, ARIMA models & backtester
+│   └── dashboard/                      # Plotly components and dashboard views
+└── tests/                              # Automated unit tests with pytest
 ```
 
 ---
 
-## License
+## 🚀 Quickstart Guide
 
-CC BY 4.0 (World Bank open data) + ILO open data (CC BY 4.0 unless otherwise stated).
+### 1. Requirements & Setup (Windows / VS Code)
+Using Python 3.10+ in PowerShell or Command Prompt:
+
+```powershell
+# In c:\Users\Asus\Downloads\r_pro
+py -m pip install -r requirements.txt
+```
+
+### 2. Run the Full Analytical Pipeline
+Executes acquisition, data audits, master panel construction, scoring, backtesting, and 2025–2035 forecasting:
+
+```powershell
+py run_pipeline.py
+```
+
+### 3. Launch the Executive Web Application
+Opens the modern, responsive HTML5/Tailwind/Chart.js web portal:
+
+```powershell
+& 'C:\Users\Asus\AppData\Local\Programs\Python\Python310\python.exe' server.py
+# Or simply run:
+.\start_web.bat
+```
+Navigate to **`http://localhost:8000`** in any web browser.
+
+### 4. Run the Test Suite
+Execute automated unit tests:
+
+```powershell
+py -m pytest tests/ -v
+```
+
+---
+
+## 🔬 Methodological Summary
+
+### 1. Robust Normalization
+All core indicators are normalized to a uniform $[0, 100]$ scale using robust min-max scaling with 1st and 99th percentile outlier capping. Negative indicators (such as unemployment, inflation, homicide, PM2.5, and tax wedge) are inverted such that higher scores consistently reflect better outcomes:
+$$\text{Score}_{\text{inverted}} = 100 - \text{Score}_{\text{scaled}}$$
+
+### 2. Equal Dimension Weighting
+Indicators are aggregated within their respective dimension first, ensuring that dimensions with more indicators do not receive disproportionate weighting merely due to column count.
+
+### 3. Worker-Profile Simulations
+Net take-home income and savings capacity are computed for distinct worker archetypes:
+* **Single Worker** (Baseline 100% average wage)
+* **Early-Career** (75% wage multiplier)
+* **Experienced** (125% wage multiplier)
+* **Skilled Technical** (155% wage multiplier)
+* **General Worker** (95% wage multiplier)
+
+$$\text{Savings Capacity} = \text{Net Income} - \text{Estimated Housing} - \text{Essential Living Costs}$$
+
+### 4. Rolling Backtesting
+Econometric forecasting models (Naive, Drift, Holt's Damped ETS, and ARIMA) are evaluated on a holdout period (2021–2024) using symmetric Mean Absolute Percentage Error (sMAPE), MAE, and RMSE.

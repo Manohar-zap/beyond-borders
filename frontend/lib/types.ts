@@ -135,9 +135,34 @@ export interface CountrySectorRow {
   output_growth: number | null;
   is_proxy: boolean;
   proxy_note: string;
+  investment_announced?: number | null;
+  investment_realized?: number | null;
+  capacity_addition?: string | null;
   source_name: string;
   source_url: string;
   observation_status: string;
+}
+
+export interface IndustrialProjectRow {
+  country_iso3: string;
+  country_name: string;
+  sector_id: string;
+  sector_name: string;
+  project_name: string;
+  sponsor: string;
+  investment_usd_million?: number | null;
+  investment_announced_usd?: number | null;
+  location?: string;
+  capacity?: string | null;
+  capacity_addition?: string | null;
+  status: string;
+  announced_year?: number;
+  announcement_year?: number;
+  operational_year?: number | null;
+  completion_year?: number | null;
+  jobs_created?: number | null;
+  jobs_expected?: number | null;
+  source?: string;
 }
 
 export interface SectorGrowthRow {
