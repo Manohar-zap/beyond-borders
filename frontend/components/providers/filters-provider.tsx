@@ -47,6 +47,7 @@ function parseList(value: string | null, fallback: string[]): string[] {
 }
 
 function parseYear(value: string | null, fallback: number): number {
+  if (value === null || value === undefined || value.trim() === "") return fallback;
   const parsed = Number(value);
   if (!Number.isFinite(parsed)) return fallback;
   return Math.min(2024, Math.max(2010, Math.round(parsed)));
