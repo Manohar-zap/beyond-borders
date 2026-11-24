@@ -76,14 +76,15 @@ def verify():
     print("\n=== 5. VERIFY CHAPTER 5, 6, REFERENCES & APPENDIX DETAILS ===")
     assert "5.1 RESULTS OBTAINED" in full_text
     assert "5.2 RESULT SUMMARY" in full_text
-    assert "5.3 DISCUSSION" in full_text
-    assert "5.4 KEY FINDINGS" in full_text
-    assert "5.5 PRACTICAL APPLICATIONS" in full_text
+    assert "5.3 COMPARATIVE MODEL BENCHMARK" in full_text
+    assert "5.4 DISCUSSION" in full_text
+    assert "5.5 KEY FINDINGS" in full_text
+    assert "5.6 PRACTICAL APPLICATIONS" in full_text
     assert "6.1 CONCLUSION" in full_text
     assert "6.2 LIMITATIONS" in full_text
     assert "6.3 FUTURE ENHANCEMENT" in full_text
     assert "[1] S. Chakraborty" in full_text and "Base Paper" in full_text
-    assert "[10] United Nations" in full_text
+    assert "[12] United Nations" in full_text
     assert "Goal 8: Decent Work and Economic Growth" in full_text
     assert "Goal 9: Industry, Innovation, and Infrastructure" in full_text
     assert "Goal 10: Reduced Inequalities" in full_text
