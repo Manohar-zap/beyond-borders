@@ -45,6 +45,20 @@ def verify():
     assert "DECEMBER 2026" in full_text
     print("Verified Guide, University, and Year.")
     
+    # Verify NO picture on Certificate page (between paragraph with CERTIFICATE and next page break / ABSTRACT)
+    cert_idx = -1
+    abstract_idx = -1
+    for i, p in enumerate(doc.paragraphs):
+        if "CERTIFICATE" in p.text and cert_idx == -1:
+            cert_idx = i
+        if "ABSTRACT" in p.text and abstract_idx == -1:
+            abstract_idx = i
+    cert_drawings = 0
+    for i in range(cert_idx - 2, abstract_idx):
+        cert_drawings += len(doc.paragraphs[i]._p.xpath('.//w:drawing'))
+    print(f"Drawings on Certificate page: {cert_drawings}")
+    assert cert_drawings == 0, f"Found {cert_drawings} drawings on Certificate page, expected 0!"
+    
     print("\n=== 4. VERIFY CHAPTER STRUCTURE & SEQUENCING ===")
     expected_order = [
         "CERTIFICATE",

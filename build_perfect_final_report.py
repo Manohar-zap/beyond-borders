@@ -263,8 +263,8 @@ def generate_report(toc_page_map=None, lot_page_map=None, lof_page_map=None):
     pgNumType0 = parse_xml(f'<w:pgNumType {nsdecls("w")} w:fmt="lowerRoman" w:start="1"/>')
     s0._sectPr.append(pgNumType0)
     
-    # Footer with Roman numeral for preliminary pages (after title page)
-    add_page_number_field(s0.footer.paragraphs[0], align=WD_ALIGN_PARAGRAPH.CENTER)
+    # Footer with Roman numeral for preliminary pages (after title page, aligned right matching template)
+    add_page_number_field(s0.footer.paragraphs[0], align=WD_ALIGN_PARAGRAPH.RIGHT)
     
     assets_dir = r"c:\Users\Asus\Downloads\r_pro\report_assets"
     logo_path = os.path.join(assets_dir, "image1.png")
@@ -331,35 +331,32 @@ def generate_report(toc_page_map=None, lot_page_map=None, lof_page_map=None):
     doc.add_page_break()
     
     # -------------------------------------------------------------------------
-    # 2. CERTIFICATE PAGE
+    # 2. CERTIFICATE PAGE (No logo on 2nd page as per template)
     # -------------------------------------------------------------------------
     p_c_u = doc.add_paragraph()
     p_c_u.alignment = WD_ALIGN_PARAGRAPH.CENTER
-    p_c_u.paragraph_format.space_before = Pt(6)
+    p_c_u.paragraph_format.space_before = Pt(16)
     p_c_u.paragraph_format.space_after = Pt(4)
     format_text(p_c_u, "PRESIDENCY UNIVERSITY\n", size_pt=24, bold=True)
-    format_text(p_c_u, "PRESIDENCY SCHOOL OF ARTIFICIAL INTELLIGENCE AND ADVANCED COMPUTING", size_pt=16, bold=True)
-    
-    add_picture_centered(doc, logo_path, width_in=1.4)
+    format_text(p_c_u, "PRESIDENCY SCHOOL OF ARTIFICIAL INTELLIGENCE\nAND ADVANCED COMPUTING", size_pt=16, bold=True)
     
     p_c_t = doc.add_paragraph()
     p_c_t.alignment = WD_ALIGN_PARAGRAPH.CENTER
-    p_c_t.paragraph_format.space_before = Pt(12)
-    p_c_t.paragraph_format.space_after = Pt(16)
-    r_cert = format_text(p_c_t, "CERTIFICATE", size_pt=16, bold=True)
-    r_cert.font.underline = True
+    p_c_t.paragraph_format.space_before = Pt(32)
+    p_c_t.paragraph_format.space_after = Pt(24)
+    format_text(p_c_t, "CERTIFICATE", size_pt=16, bold=True)
     
     p_c_b = doc.add_paragraph()
     p_c_b.alignment = WD_ALIGN_PARAGRAPH.JUSTIFY
-    p_c_b.paragraph_format.line_spacing = 1.25
-    p_c_b.paragraph_format.space_after = Pt(36)
+    p_c_b.paragraph_format.line_spacing = 1.3
+    p_c_b.paragraph_format.space_after = Pt(100)
     format_text(p_c_b, "This is to certify that the Mini Project for R Programming for Data Science-CSD2008 entitled ", size_pt=13)
     format_text(p_c_b, "“BEYOND BORDERS: GLOBAL EMPLOYMENT OPPORTUNITIES AND SECTOR DEVELOPMENT INTELLIGENCE” ", size_pt=13, bold=True)
     format_text(p_c_b, "being submitted by ", size_pt=13)
     format_text(p_c_b, "B.NANDA KUMAR REDDY bearing roll number 20241CSD0022, P. MANOHAR REDDY bearing roll number 20241CSD0041, C. TEJASHREE REDDY bearing roll number 20241CSD0023, and DILEEP GOWDA R N bearing roll number 20241CSD0007 ", size_pt=13, bold=True)
     format_text(p_c_b, "in partial fulfillment of the requirement for the award of the degree of Bachelor of Technology in Data Science in the Department of Data Science and Computing Systems is a bonafide work carried out under my supervision.", size_pt=13)
     
-    # Signature table
+    # Signature table (Left-aligned guide signature, matching template screenshot)
     sig_tab = doc.add_table(rows=1, cols=2)
     sig_tab.alignment = WD_TABLE_ALIGNMENT.CENTER
     c0, c1 = sig_tab.rows[0].cells
@@ -367,10 +364,10 @@ def generate_report(toc_page_map=None, lot_page_map=None, lof_page_map=None):
     c1.width = Inches(3.05)
     p_s0 = c0.paragraphs[0]
     p_s0.alignment = WD_ALIGN_PARAGRAPH.LEFT
-    format_text(p_s0, "______________________________\nMs. MEENA KUMARI K S\nMini Project Guide\nDept. of DSC, PSAIAC\nPresidency University", size_pt=11, bold=True)
+    format_text(p_s0, "Ms. MEENA KUMARI K S\nMini Project Guide\nDept. of DSC, PSAIAC\nPresidency University", size_pt=11.5, bold=True)
     p_s1 = c1.paragraphs[0]
     p_s1.alignment = WD_ALIGN_PARAGRAPH.RIGHT
-    format_text(p_s1, "______________________________\nHead of the Department\nDept. of DSC, PSAIAC\nPresidency University", size_pt=11, bold=True)
+    format_text(p_s1, "", size_pt=11.5)
     prevent_row_split(sig_tab)
     
     doc.add_page_break()
