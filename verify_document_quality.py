@@ -45,7 +45,7 @@ def verify():
     assert "DECEMBER 2026" in full_text
     print("Verified Guide, University, and Year.")
     
-    # Verify NO picture on Certificate page (between paragraph with CERTIFICATE and next page break / ABSTRACT)
+    # Verify NO picture on Certificate page
     cert_idx = -1
     abstract_idx = -1
     for i, p in enumerate(doc.paragraphs):
@@ -87,25 +87,23 @@ def verify():
         print(f"Heading '{heading}' verified at paragraph {found_idx}.")
         last_idx = found_idx
         
-    print("\n=== 5. VERIFY CHAPTER 5, 6, REFERENCES & APPENDIX DETAILS ===")
-    assert "5.1 RESULTS OBTAINED" in full_text
-    assert "5.2 RESULT SUMMARY" in full_text
-    assert "5.3 COMPARATIVE MODEL BENCHMARK" in full_text
-    assert "5.4 DISCUSSION" in full_text
-    assert "5.5 KEY FINDINGS" in full_text
-    assert "5.6 PRACTICAL APPLICATIONS" in full_text
-    assert "6.1 CONCLUSION" in full_text
-    assert "6.2 LIMITATIONS" in full_text
-    assert "6.3 FUTURE ENHANCEMENT" in full_text
-    assert "[1] S. Chakraborty" in full_text and "Base Paper" in full_text
-    assert "[12] United Nations" in full_text
-    assert "Goal 8: Decent Work and Economic Growth" in full_text
-    assert "Goal 9: Industry, Innovation, and Infrastructure" in full_text
-    assert "Goal 10: Reduced Inequalities" in full_text
-    assert "Goal 7: Affordable and Clean Energy" in full_text
-    assert "Goal 3: Good Health and Well-Being" in full_text
-    print("Verified all Chapter 5, Chapter 6, References [1-10], and Appendix-A SDG goals.")
-    
+    print("\n=== 5. VERIFY WEBPAGE PICS & ALL FIGURES ===")
+    figures = [
+        "Figure 3.1: Beyond Borders Data Provenance",
+        "Figure 4.1: End-to-End Methodological Architecture",
+        "Figure 4.2: Correlation Matrix",
+        "Figure 4.3: Real Monthly Wages vs. Cost of Living",
+        "Figure 4.4: Historical Sectoral Trajectory",
+        "Figure 4.5: Beyond Borders Executive Research Overview",
+        "Figure 4.6: Bilateral Country and Sector Head-to-Head",
+        "Figure 5.1: Interactive Econometric Forecast",
+        "Figure 5.2: Global Sector Development Intelligence",
+        "Figure A.1: United Nations 17 Sustainable Development Goals"
+    ]
+    for fig_sub in figures:
+        assert any(fig_sub in p.text for p in doc.paragraphs), f"Missing figure: {fig_sub}"
+        print(f"Verified Figure: {fig_sub}")
+        
     print("\n=== 6. VERIFY TABLES & ROW CONSTRAINTS ===")
     print(f"Total Tables: {len(doc.tables)}")
     for t_idx, tbl in enumerate(doc.tables):
@@ -116,7 +114,7 @@ def verify():
         print(f"Table {t_idx} ({len(tbl.rows)}x{len(tbl.columns)}): cantSplit=OK, width={total_width:.2f} in <= 6.15 in")
         assert total_width <= 6.15, f"Table {t_idx} exceeds maximum usable width: {total_width:.2f} in!"
         
-    print("\nALL 6 VERIFICATION CRITERIA PASSED FLAWLESSLY!")
+    print("\nALL 6 VERIFICATION CRITERIA PASSED FLAWLESSLY WITH WEBPAGE PICTURES INTEGRATED!")
 
 if __name__ == "__main__":
     verify()

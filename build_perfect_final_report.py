@@ -1,4 +1,6 @@
 import os
+import subprocess
+import json
 import docx
 from docx import Document
 from docx.shared import Inches, Pt, RGBColor
@@ -263,7 +265,7 @@ def generate_report(toc_page_map=None, lot_page_map=None, lof_page_map=None):
     pgNumType0 = parse_xml(f'<w:pgNumType {nsdecls("w")} w:fmt="lowerRoman" w:start="1"/>')
     s0._sectPr.append(pgNumType0)
     
-    # Footer with Roman numeral for preliminary pages (after title page, aligned right matching template)
+    # Footer with Roman numeral for preliminary pages (aligned right matching template)
     add_page_number_field(s0.footer.paragraphs[0], align=WD_ALIGN_PARAGRAPH.RIGHT)
     
     assets_dir = r"c:\Users\Asus\Downloads\r_pro\report_assets"
@@ -273,6 +275,13 @@ def generate_report(toc_page_map=None, lot_page_map=None, lof_page_map=None):
     corr_path = os.path.join(assets_dir, "fig4_2_correlation.png")
     wage_path = os.path.join(assets_dir, "fig4_3_wage_vs_cost.png")
     fore_path = os.path.join(assets_dir, "fig4_4_forecast.png")
+    
+    # Web dashboard screenshots
+    web_meth_path = os.path.join(assets_dir, "web_methodology.png")
+    web_overview_path = os.path.join(assets_dir, "web_overview.png")
+    web_comp_path = os.path.join(assets_dir, "web_comparison.png")
+    web_fore_path = os.path.join(assets_dir, "web_forecast.png")
+    web_sec_path = os.path.join(assets_dir, "web_sectors.png")
     
     # -------------------------------------------------------------------------
     # 1. TITLE / COVER PAGE
@@ -435,28 +444,29 @@ def generate_report(toc_page_map=None, lot_page_map=None, lof_page_map=None):
         "3.7": "7",
         "3.8": "7",
         "3.9": "7",
-        "CH4": "8",
-        "4.1": "8",
-        "4.2": "8",
-        "4.3": "8",
-        "4.4": "9",
-        "4.5": "9",
-        "4.6": "9",
-        "4.7": "9",
-        "4.8": "10",
-        "CH5": "12",
-        "5.1": "12",
-        "5.2": "12",
-        "5.3": "12",
-        "5.4": "13",
-        "5.5": "13",
-        "5.6": "13",
-        "CH6": "14",
-        "6.1": "14",
-        "6.2": "14",
-        "6.3": "14",
-        "REFERENCES": "15",
-        "APPENDIX-A": "16"
+        "CH4": "9",
+        "4.1": "9",
+        "4.2": "9",
+        "4.3": "9",
+        "4.4": "10",
+        "4.5": "10",
+        "4.6": "10",
+        "4.7": "10",
+        "4.8": "11",
+        "4.9": "12",
+        "CH5": "14",
+        "5.1": "14",
+        "5.2": "14",
+        "5.3": "14",
+        "5.4": "15",
+        "5.5": "15",
+        "5.6": "15",
+        "CH6": "17",
+        "6.1": "17",
+        "6.2": "17",
+        "6.3": "17",
+        "REFERENCES": "18",
+        "APPENDIX-A": "19"
     }
     if toc_page_map:
         tm.update(toc_page_map)
@@ -490,28 +500,29 @@ def generate_report(toc_page_map=None, lot_page_map=None, lof_page_map=None):
         ["", "3.7 Dataset Characteristics", tm.get("3.7", "7")],
         ["", "3.8 Description of Attributes", tm.get("3.8", "7")],
         ["", "3.9 Sample Dataset", tm.get("3.9", "7")],
-        ["4.", "METHODOLOGY AND IMPLEMENTATION", tm.get("CH4", "8")],
-        ["", "4.1 METHODLOGY", tm.get("4.1", "8")],
-        ["", "4.2 PROJECT WORK FLOW", tm.get("4.2", "8")],
-        ["", "4.3 ALGORITHM", tm.get("4.3", "8")],
-        ["", "4.4 DATA IMPORTATION IN R", tm.get("4.4", "9")],
-        ["", "4.5 DATA CLEANING AND PREPROCESSING", tm.get("4.5", "9")],
-        ["", "4.6 DATA TRANSFORMATION", tm.get("4.6", "9")],
-        ["", "4.7 EXPLORATORY DATA ANALYSIS (EDA)", tm.get("4.7", "9")],
-        ["", "4.8 DATA VISUALIZATION USING R", tm.get("4.8", "10")],
-        ["5.", "RESULTS AND DISCUSSION", tm.get("CH5", "12")],
-        ["", "5.1 RESULTS OBTAINED", tm.get("5.1", "12")],
-        ["", "5.2 RESULT SUMMARY", tm.get("5.2", "12")],
-        ["", "5.3 COMPARATIVE MODEL BENCHMARK", tm.get("5.3", "12")],
-        ["", "5.4 DISCUSSION", tm.get("5.4", "13")],
-        ["", "5.5 KEY FINDINGS", tm.get("5.5", "13")],
-        ["", "5.6 PRACTICAL APPLICATIONS", tm.get("5.6", "13")],
-        ["6.", "CONCLUSION AND FUTURE WORK", tm.get("CH6", "14")],
-        ["", "6.1 CONCLUSION", tm.get("6.1", "14")],
-        ["", "6.2 LIMITATIONS", tm.get("6.2", "14")],
-        ["", "6.3 FUTURE ENHANCEMENT AND PUBLICATION ROADMAP", tm.get("6.3", "14")],
-        ["", "REFERENCES", tm.get("REFERENCES", "15")],
-        ["", "APPENDIX-A: SUSTAINABLE DEVELOPMENT GOALS", tm.get("APPENDIX-A", "16")]
+        ["4.", "METHODOLOGY AND IMPLEMENTATION", tm.get("CH4", "9")],
+        ["", "4.1 METHODLOGY", tm.get("4.1", "9")],
+        ["", "4.2 PROJECT WORK FLOW", tm.get("4.2", "9")],
+        ["", "4.3 ALGORITHM", tm.get("4.3", "9")],
+        ["", "4.4 DATA IMPORTATION IN R", tm.get("4.4", "10")],
+        ["", "4.5 DATA CLEANING AND PREPROCESSING", tm.get("4.5", "10")],
+        ["", "4.6 DATA TRANSFORMATION", tm.get("4.6", "10")],
+        ["", "4.7 EXPLORATORY DATA ANALYSIS (EDA)", tm.get("4.7", "10")],
+        ["", "4.8 DATA VISUALIZATION USING R", tm.get("4.8", "11")],
+        ["", "4.9 INTERACTIVE WEB DASHBOARD AND VISUAL EXPLORATION", tm.get("4.9", "12")],
+        ["5.", "RESULTS AND DISCUSSION", tm.get("CH5", "14")],
+        ["", "5.1 RESULTS OBTAINED", tm.get("5.1", "14")],
+        ["", "5.2 RESULT SUMMARY", tm.get("5.2", "14")],
+        ["", "5.3 COMPARATIVE MODEL BENCHMARK", tm.get("5.3", "14")],
+        ["", "5.4 DISCUSSION", tm.get("5.4", "15")],
+        ["", "5.5 KEY FINDINGS", tm.get("5.5", "15")],
+        ["", "5.6 PRACTICAL APPLICATIONS", tm.get("5.6", "15")],
+        ["6.", "CONCLUSION AND FUTURE WORK", tm.get("CH6", "17")],
+        ["", "6.1 CONCLUSION", tm.get("6.1", "17")],
+        ["", "6.2 LIMITATIONS", tm.get("6.2", "17")],
+        ["", "6.3 FUTURE ENHANCEMENT AND PUBLICATION ROADMAP", tm.get("6.3", "17")],
+        ["", "REFERENCES", tm.get("REFERENCES", "18")],
+        ["", "APPENDIX-A: SUSTAINABLE DEVELOPMENT GOALS", tm.get("APPENDIX-A", "19")]
     ]
     create_table(doc, [1.0, 4.3, 0.8], ["CHAPTER NO.", "TITLE", "PAGE NO."], toc_rows, align_cols={0: WD_ALIGN_PARAGRAPH.CENTER, 2: WD_ALIGN_PARAGRAPH.RIGHT})
     
@@ -528,8 +539,8 @@ def generate_report(toc_page_map=None, lot_page_map=None, lof_page_map=None):
         "Table 3.3": "7",
         "Table 3.4": "7",
         "Table 3.5": "7",
-        "Table 5.1": "12",
-        "Table 5.2": "12"
+        "Table 5.1": "14",
+        "Table 5.2": "14"
     }
     if lot_page_map:
         lm.update(lot_page_map)
@@ -541,8 +552,8 @@ def generate_report(toc_page_map=None, lot_page_map=None, lof_page_map=None):
         ["4", "Table 3.3", "Master Analytical Panel Characteristics Across 15 Economies", lm.get("Table 3.3", "7")],
         ["5", "Table 3.4", "Core Analytical Attributes and Standard Statistical Units", lm.get("Table 3.4", "7")],
         ["6", "Table 3.5", "Cross-Sectional Master Observation Sample (Head View)", lm.get("Table 3.5", "7")],
-        ["7", "Table 5.1", "Cross-National Econometric Benchmarks and Forecasted Indicators (2025–2030)", lm.get("Table 5.1", "12")],
-        ["8", "Table 5.2", "Comparative Benchmark Evaluation: Proposed Damped State-Space ETS vs. Baseline Models", lm.get("Table 5.2", "12")]
+        ["7", "Table 5.1", "Cross-National Econometric Benchmarks and Forecasted Indicators (2025–2030)", lm.get("Table 5.1", "14")],
+        ["8", "Table 5.2", "Comparative Benchmark Evaluation: Proposed Damped State-Space ETS vs. Baseline Models", lm.get("Table 5.2", "14")]
     ]
     create_table(doc, [0.6, 1.1, 3.6, 0.8], ["Sl. No.", "Table Name", "Table Caption", "Page No."], lot_rows, align_cols={0: WD_ALIGN_PARAGRAPH.CENTER, 3: WD_ALIGN_PARAGRAPH.RIGHT})
     
@@ -550,21 +561,31 @@ def generate_report(toc_page_map=None, lot_page_map=None, lof_page_map=None):
     
     add_h1(doc, "LIST OF FIGURES")
     fm = {
-        "Figure 4.1": "8",
+        "Figure 3.1": "7",
+        "Figure 4.1": "9",
         "Figure 4.2": "10",
         "Figure 4.3": "10",
         "Figure 4.4": "11",
-        "Figure A.1": "16"
+        "Figure 4.5": "12",
+        "Figure 4.6": "13",
+        "Figure 5.1": "15",
+        "Figure 5.2": "16",
+        "Figure A.1": "19"
     }
     if lof_page_map:
         fm.update(lof_page_map)
         
     lof_rows = [
-        ["1", "Figure 4.1", "End-to-End Methodological Architecture of Beyond Borders Platform", fm.get("Figure 4.1", "8")],
-        ["2", "Figure 4.2", "Correlation Matrix of Key Macroeconomic and Labor Indicators", fm.get("Figure 4.2", "10")],
-        ["3", "Figure 4.3", "Real Monthly Wages vs. Cost of Living Across Top 15 Economies (USD PPP)", fm.get("Figure 4.3", "10")],
-        ["4", "Figure 4.4", "Historical Sectoral Trajectory and Damped Trend Forecast (2010–2030)", fm.get("Figure 4.4", "11")],
-        ["5", "Figure A.1", "United Nations 17 Sustainable Development Goals (SDG Grid)", fm.get("Figure A.1", "16")]
+        ["1", "Figure 3.1", "Beyond Borders Data Provenance and Processed Research Pipeline Interface", fm.get("Figure 3.1", "7")],
+        ["2", "Figure 4.1", "End-to-End Methodological Architecture of Beyond Borders Platform", fm.get("Figure 4.1", "9")],
+        ["3", "Figure 4.2", "Correlation Matrix of Key Macroeconomic and Labor Indicators", fm.get("Figure 4.2", "10")],
+        ["4", "Figure 4.3", "Real Monthly Wages vs. Cost of Living Across Top 15 Economies (USD PPP)", fm.get("Figure 4.3", "10")],
+        ["5", "Figure 4.4", "Historical Sectoral Trajectory and Damped Trend Forecast (2010–2030)", fm.get("Figure 4.4", "11")],
+        ["6", "Figure 4.5", "Beyond Borders Executive Research Overview and Macroeconomic Intelligence Dashboard", fm.get("Figure 4.5", "12")],
+        ["7", "Figure 4.6", "Bilateral Country and Sector Head-to-Head Comparative Intelligence Hub", fm.get("Figure 4.6", "13")],
+        ["8", "Figure 5.1", "Interactive Econometric Forecast and Multi-Country Horizon Outlook Interface (2025–2030)", fm.get("Figure 5.1", "15")],
+        ["9", "Figure 5.2", "Global Sector Development Intelligence and Documented Proxy Trajectory Explorer", fm.get("Figure 5.2", "16")],
+        ["10", "Figure A.1", "United Nations 17 Sustainable Development Goals (SDG Grid)", fm.get("Figure A.1", "19")]
     ]
     create_table(doc, [0.6, 1.1, 3.6, 0.8], ["Sl. No.", "Figure Name", "Caption", "Page No."], lof_rows, align_cols={0: WD_ALIGN_PARAGRAPH.CENTER, 3: WD_ALIGN_PARAGRAPH.RIGHT})
     
@@ -599,20 +620,17 @@ def generate_report(toc_page_map=None, lot_page_map=None, lof_page_map=None):
     h_p0.alignment = WD_ALIGN_PARAGRAPH.RIGHT
     h_p0.paragraph_format.space_before = Pt(0)
     h_p0.paragraph_format.space_after = Pt(2)
-    format_text(h_p0, "Beyond Borders — R Programming for Data Science (CSD2008)", font_name="Times New Roman", size_pt=8.5, italic=True, color_rgb=(100, 116, 139))
+    format_text(h_p0, "Beyond Borders: Global Employment & Sector Intelligence (CSD2008)", font_name="Times New Roman", size_pt=8.5, italic=True, color_rgb=(100, 116, 139))
     
     h_p1 = s1.header.add_paragraph()
     h_p1.paragraph_format.space_before = Pt(0)
     h_p1.paragraph_format.space_after = Pt(0)
-    h_p1_pBdr = parse_xml(f'''
-        <w:pBdr {nsdecls("w")}>
-            <w:top w:val="thinThickSmallGap" w:sz="24" w:space="1" w:color="auto"/>
-        </w:pBdr>
-    ''')
-    h_p1._p.get_or_add_pPr().append(h_p1_pBdr)
+    pBdr = parse_xml(f'<w:pBdr {nsdecls("w")}><w:bottom w:val="single" w:sz="6" w:space="1" w:color="0B69A3"/></w:pBdr>')
+    h_p1._p.get_or_add_pPr().append(pBdr)
     
-    # Section 1 Footer: Arabic page number
-    add_page_number_field(s1.footer.paragraphs[0], align=WD_ALIGN_PARAGRAPH.CENTER)
+    # Section 1 Footer: Page Number centered
+    f_p = s1.footer.paragraphs[0]
+    add_page_number_field(f_p, align=WD_ALIGN_PARAGRAPH.CENTER)
     
     # =========================================================================
     # CHAPTER 1: INTRODUCTION
@@ -625,32 +643,32 @@ def generate_report(toc_page_map=None, lot_page_map=None, lof_page_map=None):
         "technological convergence, supply chain realignment, and changing demographic profiles. Strategic industrial domains "
         "such as semiconductor microfabrication, artificial intelligence (AI), software engineering, renewable energy, electric "
         "mobility, and biotechnology now dictate national economic competitiveness and employment trajectories. Concurrently, "
-        "graduates, researchers, and policymakers face increasing complexities when assessing career opportunities, human "
-        "capital deployment, and cross-border talent migration."
+        "graduates, researchers, and policymakers face increasing complexities when assessing career opportunities, human capital "
+        "deployment, and cross-border talent migration."
     )
     add_p(
         doc,
-        "Historically, cross-border labor evaluations have relied on blunt aggregate metrics such as headline nominal "
-        "salaries converted at market exchange rates or national gross domestic product (GDP) figures. These conventional metrics "
-        "frequently mislead decision-makers because they overlook stark divergences in local purchasing power, housing costs, "
-        "inflationary trajectories, and occupational demand dynamics. An annual gross income of $75,000 in Silicon Valley or London "
-        "yields a vastly different standard of living compared to equivalent compensation in Bangalore, Munich, or Tokyo once "
-        "purchasing power parities (PPP), statutory social deductions, and local consumption baskets are accounted for."
+        "Historically, cross-border labor evaluations have relied on blunt aggregate metrics such as headline nominal salaries "
+        "converted at market exchange rates or national gross domestic product (GDP) figures. These conventional metrics frequently "
+        "mislead decision-makers because they overlook stark divergences in local purchasing power, housing costs, inflationary "
+        "trajectories, and occupational demand dynamics. An annual gross income of $75,000 in Silicon Valley or London yields a vastly "
+        "different standard of living compared to equivalent compensation in Bangalore, Munich, or Tokyo once purchasing power "
+        "parities (PPP), statutory social deductions, and local consumption baskets are accounted for."
     )
     add_p(
         doc,
-        "Driven by these analytical shortcomings, this project, Beyond Borders, develops an evidence-based, reproducible, "
-        "econometric data science system written in the R programming language. By systematically linking official open statistics "
-        "from the World Bank, the International Labour Organization (ILOSTAT), and the OECD across the world's 15 largest "
-        "economies over a 15-year historical horizon (2010–2024), this study establishes an empirical decision-support "
-        "architecture that balances employment demand with financial sustainability and projects multi-country trends to 2030."
+        "Driven by these analytical shortcomings, this project, Beyond Borders, develops an evidence-based, reproducible, econometric "
+        "data science system written in the R programming language. By systematically linking official open statistics from the World Bank, "
+        "the International Labour Organization (ILOSTAT), and the OECD across the world's 15 largest economies over a 15-year historical "
+        "horizon (2010–2024), this study establishes an empirical decision-support architecture that balances employment demand with financial "
+        "sustainability and projects multi-country trends to 2030."
     )
     
     add_h2(doc, "1.2 PROBLEM STATEMENT")
     add_p(
         doc,
-        "Despite abundant open macroeconomic data, stakeholders encounter acute difficulties when comparing global labor "
-        "opportunities due to three critical systemic bottlenecks:"
+        "Despite abundant open macroeconomic data, stakeholders encounter acute difficulties when comparing global labor opportunities "
+        "due to three critical systemic bottlenecks:"
     )
     add_p(doc, "Official databases report wages in diverse local currency units (USD, EUR, INR, JPY, CNY, GBP, etc.) subject to volatile foreign exchange fluctuations, obscuring real purchasing power.", bold_prefix="1. Exchange Rate Disconnect: ")
     add_p(doc, "Labor datasets categorize employment under disparate classifications (ISCO vs. ISIC vs. national taxonomies), with frequent reporting gaps, missing quarterly entries, and differing survey definitions.", bold_prefix="2. Data Fragmentation and Incomparability: ")
@@ -665,8 +683,21 @@ def generate_report(toc_page_map=None, lot_page_map=None, lof_page_map=None):
     add_p(doc, "To generate publication-grade exploratory data visual analytics in R using ggplot2, corrplot, and tidyr.", bold_prefix="5. Visual Analytics and Policy Decision Support: ")
     
     add_h2(doc, "1.4 SCOPE AND LIMITATIONS")
-    add_p(doc, "The scope spans 15 sovereign economies representing over 75% of global GDP: United States (USA), China (CHN), Germany (DEU), Japan (JPN), India (IND), United Kingdom (GBR), France (FRA), Italy (ITA), Canada (CAN), Brazil (BRA), South Korea (KOR), Mexico (MEX), Australia (AUS), Spain (ESP), and Indonesia (IDN). The study concentrates on 5 strategic technology sectors: Semiconductors, AI & Software, Renewable Energy, Automotive/EV, and Healthcare/Biotechnology over the period 2010–2024, forecasting to 2030.", bold_prefix="Scope: ")
-    add_p(doc, "The analysis relies on annual aggregations from official international repositories (World Bank, ILO), meaning short-term monthly shocks (e.g., sudden quarterly interest rate shifts) are smoothed. Furthermore, developing economies exhibit intermittent reporting gaps in occupation-specific wage series that necessitate robust holdout filtering rather than arbitrary artificial imputation.", bold_prefix="Limitations: ")
+    add_p(
+        doc,
+        "The scope spans 15 sovereign economies representing over 75% of global GDP: United States (USA), China (CHN), Germany (DEU), "
+        "Japan (JPN), India (IND), United Kingdom (GBR), France (FRA), Italy (ITA), Canada (CAN), Brazil (BRA), South Korea (KOR), "
+        "Mexico (MEX), Australia (AUS), Spain (ESP), and Indonesia (IDN). The study concentrates on 5 strategic technology sectors: "
+        "Semiconductors, AI & Software, Renewable Energy, Automotive/EV, and Healthcare/Biotechnology over the period 2010–2024, forecasting to 2030.",
+        bold_prefix="Scope: "
+    )
+    add_p(
+        doc,
+        "The analysis relies on annual aggregations from official international repositories (World Bank, ILO), meaning short-term monthly "
+        "shocks (e.g., sudden quarterly interest rate shifts) are smoothed. Furthermore, developing economies exhibit intermittent reporting "
+        "gaps in occupation-specific wage series that necessitate robust holdout filtering rather than arbitrary artificial imputation.",
+        bold_prefix="Limitations: "
+    )
     
     add_h2(doc, "1.5 METHODOLOGY OVERVIEW")
     add_p(
@@ -679,8 +710,8 @@ def generate_report(toc_page_map=None, lot_page_map=None, lof_page_map=None):
     add_h2(doc, "1.6 NOVEL RESEARCH CONTRIBUTIONS AND DIFFERENTIATORS")
     add_p(
         doc,
-        "Unlike commercial compensation portals (e.g. Levels.fyi, Numbeo) which rely on crowd-sourced unadjusted nominal figures, "
-        "or macro policy reports (e.g. ILO, World Bank) which lack individualized decision-support tooling, Beyond Borders introduces five distinct novelties:"
+        "Unlike commercial compensation portals (e.g. Levels.fyi, Numbeo) which rely on crowd-sourced unadjusted nominal figures, or macro policy "
+        "reports (e.g. ILO, World Bank) which lack individualized decision-support tooling, Beyond Borders introduces five distinct novelties:"
     )
     add_p(doc, "Applies sequential Winsorization, constant-2010 CPI deflation, and World Bank PPP conversion factors, stripping away currency distortions of up to 300%.", bold_prefix="1. Triple-Tier Economic Normalization Engine: ")
     add_p(doc, "Introduces a damping factor phi in [0.80, 0.98] to force long-term trajectories toward a realistic asymptote, preventing the explosive over-extrapolations common in linear trend models.", bold_prefix="2. State-Space Damped Trend Forecasting (ETS(A,Ad,N)): ")
@@ -704,7 +735,6 @@ def generate_report(toc_page_map=None, lot_page_map=None, lof_page_map=None):
     
     add_h2(doc, "2.2 SURVEY OF EXISTING SYSTEMS OR TECHNIQUES")
     add_p(doc, "Table 2.1 provides a structured survey of benchmark econometric literature, with the base paper published in 2025:")
-    
     lit_rows = [
         [
             "1",
@@ -757,7 +787,7 @@ def generate_report(toc_page_map=None, lot_page_map=None, lof_page_map=None):
             "Focused purely on statistical univariate series without multi-domain composite scoring or macroeconomic context."
         ]
     ]
-    create_table(doc, [0.4, 0.9, 1.2, 0.8, 0.45, 0.8, 0.75, 0.8], ["Sl. No.", "Author Name", "Article Title", "Journal Name", "Published Year", "Methods Used", "Merits", "Demerits"], lit_rows, align_cols={0: WD_ALIGN_PARAGRAPH.CENTER, 4: WD_ALIGN_PARAGRAPH.CENTER}, font_size=8)
+    create_table(doc, [0.35, 0.95, 1.15, 0.85, 0.45, 0.95, 0.75, 0.7], ["Sl. No.", "Author Name", "Article Title", "Journal Name", "Published Year", "Methods Used", "Merits", "Demerits"], lit_rows, align_cols={0: WD_ALIGN_PARAGRAPH.CENTER, 4: WD_ALIGN_PARAGRAPH.CENTER}, font_size=8.0)
     
     add_h2(doc, "2.3 RESEARCH GAPS IDENTIFIED")
     add_p(doc, "Prior literature reveals four key gaps: (1) Siloed analysis isolating employment, salaries, and living costs; (2) Unbounded trend explosion over 5-to-10-year horizons; (3) Lack of empirical holdout out-of-sample backtesting; and (4) Opaque closed-source workflows lacking end-to-end reproducibility.")
@@ -782,9 +812,7 @@ def generate_report(toc_page_map=None, lot_page_map=None, lof_page_map=None):
         ["Display", "1920 × 1080 Full HD Resolution"],
         ["System", "Desktop / Laptop (64-bit Architecture)"]
     ]
-    create_table(doc, [2.0, 4.1], ["Component", "Specification"], hw_rows)
-    
-    doc.add_paragraph().paragraph_format.space_after = Pt(8)
+    create_table(doc, [2.2, 3.9], ["Component", "Specification"], hw_rows)
     
     add_h2(doc, "3.2 Software Requirements")
     sw_rows = [
@@ -795,7 +823,7 @@ def generate_report(toc_page_map=None, lot_page_map=None, lof_page_map=None):
         ["Required R Packages", "ggplot2, dplyr, tidyr, readr, caret, corrplot, forecast, shiny"],
         ["Git & GitHub", "Version Control and Team Branch Management (Branch: Na)"]
     ]
-    create_table(doc, [2.0, 4.1], ["Software", "Purpose"], sw_rows)
+    create_table(doc, [2.2, 3.9], ["Software", "Purpose"], sw_rows)
     
     add_h2(doc, "3.3 Introduction to R")
     add_p(doc, "R is an open-source statistical programming language renowned for its expressive vectorization, functional paradigms, and extensive CRAN ecosystem. Within data science and empirical econometrics, R serves as the premier computational tool for longitudinal data wrangling, time-series state-space modeling, and grammar-of-graphics visual publication.")
@@ -843,6 +871,14 @@ def generate_report(toc_page_map=None, lot_page_map=None, lof_page_map=None):
         ["GBR", "2023", "AI & Software", "FP.CPI.TOTL", "141.2", "index (2010 = 100)"]
     ]
     create_table(doc, [0.7, 0.5, 1.3, 1.2, 1.0, 1.4], ["Country", "Year", "Sector", "Indicator ID", "Observed Value", "Standardized Unit"], sample_rows, align_cols={0: WD_ALIGN_PARAGRAPH.CENTER, 1: WD_ALIGN_PARAGRAPH.CENTER})
+    
+    add_p(
+        doc,
+        "In accordance with academic verification guidelines, Figure 3.1 displays the interactive web application interface for "
+        "evidence provenance and processed dataset registry. Official open datasets harvested from the World Bank WDI and ILOSTAT are "
+        "processed into high-performance Apache Parquet and CSV matrices with explicit transformation notes and zero artificial imputation:"
+    )
+    add_picture_centered(doc, web_meth_path, width_in=5.4, caption="Figure 3.1: Beyond Borders Data Provenance and Processed Research Pipeline Interface")
     
     doc.add_page_break()
     
@@ -957,6 +993,23 @@ def generate_report(toc_page_map=None, lot_page_map=None, lof_page_map=None):
         "}"
     )
     
+    add_h2(doc, "4.9 INTERACTIVE WEB DASHBOARD AND VISUAL EXPLORATION")
+    add_p(
+        doc,
+        "To make the econometric models and panel datasets universally accessible to researchers, students, and policymakers, the platform "
+        "integrates a responsive Next.js web intelligence workspace. Figure 4.5 captures the executive overview interface, presenting multi-country "
+        "dataset statistics, interactive filtering across 15 economies and 5 sectors, and key macroeconomic research signals:"
+    )
+    add_picture_centered(doc, web_overview_path, width_in=5.4, caption="Figure 4.5: Beyond Borders Executive Research Overview and Macroeconomic Intelligence Dashboard")
+    
+    add_p(
+        doc,
+        "Figure 4.6 presents the bilateral head-to-head comparison hub. Decision-makers can benchmark two sovereign economies side-by-side across "
+        "target industrial sectors (e.g., United States vs. Germany in Semiconductors), evaluating workforce headcounts, professional earnings in "
+        "real/PPP terms, and a multi-axis strategic competitiveness polygon:"
+    )
+    add_picture_centered(doc, web_comp_path, width_in=5.4, caption="Figure 4.6: Bilateral Country and Sector Head-to-Head Comparative Intelligence Hub")
+    
     doc.add_page_break()
     
     # =========================================================================
@@ -1024,6 +1077,22 @@ def generate_report(toc_page_map=None, lot_page_map=None, lof_page_map=None):
     add_p(doc, "Offers quantitative decision support for skilled graduates and researchers evaluating international relocations.", bold_prefix="• Global Talent Mobility: ")
     add_p(doc, "Aids national labor and commerce ministries in benchmarking technological competitiveness and allocating incentives.", bold_prefix="• Industrial Policymakers: ")
     add_p(doc, "Informs strategic site selection for multinational corporations establishing offshore R&D and semiconductor facilities.", bold_prefix="• Enterprise Strategy: ")
+    
+    add_p(
+        doc,
+        "To operationalize these practical applications in real-world environments, the platform provides dedicated interactive modules. "
+        "Figure 5.1 depicts the live forecasting module of the web platform. Users can evaluate multi-country comparative growth horizons "
+        "through 2030, toggle 80% and 95% empirical confidence intervals, and inspect holdout backtest validation statuses (MAPE <= 10%):"
+    )
+    add_picture_centered(doc, web_fore_path, width_in=5.4, caption="Figure 5.1: Interactive Econometric Forecast and Multi-Country Horizon Outlook Interface (2025–2030)")
+    
+    add_p(
+        doc,
+        "Figure 5.2 displays the sector development intelligence interface tracking documented industrial proxies (e.g., ICT service exports, "
+        "high-technology manufacturing, and patent filings). The interactive view enables longitudinal trajectory exploration, automated CAGR "
+        "computation, and raw empirical data export:"
+    )
+    add_picture_centered(doc, web_sec_path, width_in=5.4, caption="Figure 5.2: Global Sector Development Intelligence and Documented Proxy Trajectory Explorer")
     
     doc.add_page_break()
     
